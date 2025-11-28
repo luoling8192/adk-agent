@@ -14,7 +14,7 @@ type Client struct {
 }
 
 func NewEntClient(databaseURL string) (*Client, error) {
-	client, err := ent.Open(dialect.Postgres, databaseURL)
+	client, err := ent.Open(dialect.Postgres, databaseURL+"?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}

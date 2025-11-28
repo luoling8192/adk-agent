@@ -6,6 +6,7 @@ words:
   - adk
   - entgo
   - entsql
+  - godotenv
   - hnsw
   - jieba
   - lmittmann

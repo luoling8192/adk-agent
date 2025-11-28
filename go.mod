@@ -5,6 +5,7 @@ go 1.25.1
 require (
 	entgo.io/ent v0.14.5
 	github.com/google/uuid v1.6.0
+	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/lmittmann/tint v1.1.2
 	github.com/nekomeowww/fo v1.6.1
