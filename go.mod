@@ -5,7 +5,11 @@ go 1.25.1
 require (
 	entgo.io/ent v0.14.5
 	github.com/google/uuid v1.6.0
+	github.com/lib/pq v1.10.9
+	github.com/lmittmann/tint v1.1.2
+	github.com/nekomeowww/fo v1.6.1
 	github.com/pgvector/pgvector-go v0.3.0
+	github.com/samber/lo v1.52.0
 )
 
 require (
@@ -19,6 +23,8 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/zclconf/go-cty v1.16.2 // indirect
 	github.com/zclconf/go-cty-yaml v1.1.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
+	go.uber.org/zap v1.27.1 // indirect
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/text v0.23.0 // indirect

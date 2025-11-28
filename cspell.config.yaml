@@ -4,5 +4,15 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - adk
+  - entgo
+  - entsql
+  - hnsw
+  - jieba
+  - lmittmann
+  - luoling
+  - nekomeowww
+  - Nillable
+  - pgvector
+  - samber
 ignoreWords: []
 import: []
