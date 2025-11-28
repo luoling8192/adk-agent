@@ -47,17 +47,17 @@ func (ChatMessage) Fields() []ent.Field {
 		field.Other("content_vector_1536", pgvector.Vector{}).
 			SchemaType(map[string]string{
 				dialect.Postgres: "vector(1536)",
-			}),
+			}).Nillable(),
 
 		field.Other("content_vector_1024", pgvector.Vector{}).
 			SchemaType(map[string]string{
 				dialect.Postgres: "vector(1024)",
-			}),
+			}).Nillable(),
 
 		field.Other("content_vector_768", pgvector.Vector{}).
 			SchemaType(map[string]string{
 				dialect.Postgres: "vector(768)",
-			}),
+			}).Nillable(),
 
 		field.JSON("jieba_tokens", []string{}).Default([]string{}),
 

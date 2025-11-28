@@ -23,6 +23,6 @@ func NewEntClient(databaseURL string) (*Client, error) {
 }
 
 func (c *Client) Ping(ctx context.Context) error {
-	_, err := c.Client.ExecContext(ctx, "SELECT 1")
+	_, err := c.ExecContext(ctx, "SELECT 1")
 	return err
 }

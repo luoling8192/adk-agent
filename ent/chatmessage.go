@@ -46,11 +46,11 @@ type ChatMessage struct {
 	// PlatformTimestamp holds the value of the "platform_timestamp" field.
 	PlatformTimestamp int64 `json:"platform_timestamp,omitempty"`
 	// ContentVector1536 holds the value of the "content_vector_1536" field.
-	ContentVector1536 pgvector.Vector `json:"content_vector_1536,omitempty"`
+	ContentVector1536 *pgvector.Vector `json:"content_vector_1536,omitempty"`
 	// ContentVector1024 holds the value of the "content_vector_1024" field.
-	ContentVector1024 pgvector.Vector `json:"content_vector_1024,omitempty"`
+	ContentVector1024 *pgvector.Vector `json:"content_vector_1024,omitempty"`
 	// ContentVector768 holds the value of the "content_vector_768" field.
-	ContentVector768 pgvector.Vector `json:"content_vector_768,omitempty"`
+	ContentVector768 *pgvector.Vector `json:"content_vector_768,omitempty"`
 	// JiebaTokens holds the value of the "jieba_tokens" field.
 	JiebaTokens []string `json:"jieba_tokens,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -67,12 +67,12 @@ func (*ChatMessage) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case chatmessage.FieldContentVector1536, chatmessage.FieldContentVector1024, chatmessage.FieldContentVector768:
+			values[i] = &sql.NullScanner{S: new(pgvector.Vector)}
 		case chatmessage.FieldFromUserUUID, chatmessage.FieldOwnerAccountID:
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		case chatmessage.FieldJiebaTokens:
 			values[i] = new([]byte)
-		case chatmessage.FieldContentVector1536, chatmessage.FieldContentVector1024, chatmessage.FieldContentVector768:
-			values[i] = new(pgvector.Vector)
 		case chatmessage.FieldIsReply:
 			values[i] = new(sql.NullBool)
 		case chatmessage.FieldPlatformTimestamp, chatmessage.FieldCreatedAt, chatmessage.FieldUpdatedAt, chatmessage.FieldDeletedAt:
@@ -183,22 +183,25 @@ func (_m *ChatMessage) assignValues(columns []string, values []any) error {
 				_m.PlatformTimestamp = value.Int64
 			}
 		case chatmessage.FieldContentVector1536:
-			if value, ok := values[i].(*pgvector.Vector); !ok {
+			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field content_vector_1536", values[i])
-			} else if value != nil {
-				_m.ContentVector1536 = *value
+			} else if value.Valid {
+				_m.ContentVector1536 = new(pgvector.Vector)
+				*_m.ContentVector1536 = *value.S.(*pgvector.Vector)
 			}
 		case chatmessage.FieldContentVector1024:
-			if value, ok := values[i].(*pgvector.Vector); !ok {
+			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field content_vector_1024", values[i])
-			} else if value != nil {
-				_m.ContentVector1024 = *value
+			} else if value.Valid {
+				_m.ContentVector1024 = new(pgvector.Vector)
+				*_m.ContentVector1024 = *value.S.(*pgvector.Vector)
 			}
 		case chatmessage.FieldContentVector768:
-			if value, ok := values[i].(*pgvector.Vector); !ok {
+			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field content_vector_768", values[i])
-			} else if value != nil {
-				_m.ContentVector768 = *value
+			} else if value.Valid {
+				_m.ContentVector768 = new(pgvector.Vector)
+				*_m.ContentVector768 = *value.S.(*pgvector.Vector)
 			}
 		case chatmessage.FieldJiebaTokens:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -305,14 +308,20 @@ func (_m *ChatMessage) String() string {
 	builder.WriteString("platform_timestamp=")
 	builder.WriteString(fmt.Sprintf("%v", _m.PlatformTimestamp))
 	builder.WriteString(", ")
-	builder.WriteString("content_vector_1536=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector1536))
+	if v := _m.ContentVector1536; v != nil {
+		builder.WriteString("content_vector_1536=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("content_vector_1024=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector1024))
+	if v := _m.ContentVector1024; v != nil {
+		builder.WriteString("content_vector_1024=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
-	builder.WriteString("content_vector_768=")
-	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector768))
+	if v := _m.ContentVector768; v != nil {
+		builder.WriteString("content_vector_768=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteString(", ")
 	builder.WriteString("jieba_tokens=")
 	builder.WriteString(fmt.Sprintf("%v", _m.JiebaTokens))

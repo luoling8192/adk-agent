@@ -702,7 +702,7 @@ func (m *ChatMessageMutation) ContentVector1536() (r pgvector.Vector, exists boo
 // OldContentVector1536 returns the old "content_vector_1536" field's value of the ChatMessage entity.
 // If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ChatMessageMutation) OldContentVector1536(ctx context.Context) (v pgvector.Vector, err error) {
+func (m *ChatMessageMutation) OldContentVector1536(ctx context.Context) (v *pgvector.Vector, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldContentVector1536 is only allowed on UpdateOne operations")
 	}
@@ -738,7 +738,7 @@ func (m *ChatMessageMutation) ContentVector1024() (r pgvector.Vector, exists boo
 // OldContentVector1024 returns the old "content_vector_1024" field's value of the ChatMessage entity.
 // If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ChatMessageMutation) OldContentVector1024(ctx context.Context) (v pgvector.Vector, err error) {
+func (m *ChatMessageMutation) OldContentVector1024(ctx context.Context) (v *pgvector.Vector, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldContentVector1024 is only allowed on UpdateOne operations")
 	}
@@ -774,7 +774,7 @@ func (m *ChatMessageMutation) ContentVector768() (r pgvector.Vector, exists bool
 // OldContentVector768 returns the old "content_vector_768" field's value of the ChatMessage entity.
 // If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ChatMessageMutation) OldContentVector768(ctx context.Context) (v pgvector.Vector, err error) {
+func (m *ChatMessageMutation) OldContentVector768(ctx context.Context) (v *pgvector.Vector, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldContentVector768 is only allowed on UpdateOne operations")
 	}

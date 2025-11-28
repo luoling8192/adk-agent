@@ -579,15 +579,15 @@ func (_c *ChatMessageCreate) createSpec() (*ChatMessage, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := _c.mutation.ContentVector1536(); ok {
 		_spec.SetField(chatmessage.FieldContentVector1536, field.TypeOther, value)
-		_node.ContentVector1536 = value
+		_node.ContentVector1536 = &value
 	}
 	if value, ok := _c.mutation.ContentVector1024(); ok {
 		_spec.SetField(chatmessage.FieldContentVector1024, field.TypeOther, value)
-		_node.ContentVector1024 = value
+		_node.ContentVector1024 = &value
 	}
 	if value, ok := _c.mutation.ContentVector768(); ok {
 		_spec.SetField(chatmessage.FieldContentVector768, field.TypeOther, value)
-		_node.ContentVector768 = value
+		_node.ContentVector768 = &value
 	}
 	if value, ok := _c.mutation.JiebaTokens(); ok {
 		_spec.SetField(chatmessage.FieldJiebaTokens, field.TypeJSON, value)
