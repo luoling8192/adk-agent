@@ -220,6 +220,18 @@ func main() {
 				return
 			}
 			slog.Info("Summary generated", "summary", summary, "duration", time.Since(summaryDurationStart))
+
+			extractedItemsDurationStart := time.Now()
+			extractedItems, err := agent.ExtractSummary(ctx, llmClient, summary)
+			if err != nil {
+				slog.Error("failed to extract summary", "error", err)
+				return
+			}
+			slog.Info("Extracted items", "count", len(extractedItems), "duration", time.Since(extractedItemsDurationStart))
+
+			for _, item := range extractedItems {
+				slog.Info("Extracted item", "from_name", item.FromName, "tags", item.Tags, "description", item.Description)
+			}
 		})
 	}
 
