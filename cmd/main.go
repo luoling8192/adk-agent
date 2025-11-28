@@ -7,7 +7,6 @@ import (
 	"os"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -16,6 +15,7 @@ import (
 	"github.com/lmittmann/tint"
 	"github.com/luoling8192/adk-agent/ent"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	"github.com/luoling8192/adk-agent/internal/agent"
 	"github.com/luoling8192/adk-agent/internal/datastore"
 	"github.com/nekomeowww/fo"
 	"github.com/samber/lo"
@@ -139,6 +139,12 @@ func main() {
 		return
 	}
 
+	llmClient, err := agent.NewLLMClient(os.Getenv("LLM_BASE_URL"), os.Getenv("LLM_API_KEY"))
+	if err != nil {
+		slog.Error("failed to create llm client", "error", err)
+		return
+	}
+
 	var wg conc.WaitGroup
 	for day := range dayCountInt {
 		wg.Go(func() {
@@ -205,9 +211,15 @@ func main() {
 				))
 			}
 
-			fmt.Println(strings.Join(formattedMsgs, "\n"))
+			slog.Info("Messages processed", "count", len(formattedMsgs), "duration", time.Since(durationStart))
 
-			slog.Info("Time taken", "duration", time.Since(durationStart))
+			summaryDurationStart := time.Now()
+			summary, err := agent.SummaryMessages(ctx, llmClient, formattedMsgs)
+			if err != nil {
+				slog.Error("failed to summarize messages", "error", err)
+				return
+			}
+			slog.Info("Summary generated", "summary", summary, "duration", time.Since(summaryDurationStart))
 		})
 	}
 
