@@ -1,0 +1,67 @@
+name: Testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**/*.md"
+
+jobs:
+  buildtest:
+    name: Build Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "^1.24"
+          cache: true
+
+      # Build test
+      - name: Test Build
+        run: go build -a -o "release/factorio-rcon-api" "github.com/nekomeowww/factorio-rcon-api/v2/cmd/api-server"
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "^1.24"
+          cache: true
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v8.0.0
+        with:
+          # Optional: golangci-lint command line arguments.
+          args: "--timeout=10m"
+
+  unittest:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "^1.24"
+          cache: true
+
+      - name: Unit tests
+        run: |
+          go test ./... -coverprofile=coverage.out -covermode=atomic -p=1
+          go tool cover -func coverage.out

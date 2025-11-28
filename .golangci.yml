@@ -1,0 +1,93 @@
+version: "2"
+linters:
+  default: all
+  disable:
+    - containedctx
+    - contextcheck
+    - cyclop
+    - depguard
+    - err113
+    - exhaustruct
+    - funlen
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - gocyclo
+    - godot
+    - godox
+    - ireturn
+    - lll
+    - maintidx
+    - nilnil
+    - nlreturn
+    - paralleltest
+    - tagalign
+    - tagliatelle
+    - testpackage
+    - varnamelen
+    - wrapcheck
+  settings:
+    dupl:
+      threshold: 600
+    gocritic:
+      disabled-checks:
+        - ifElseChain
+    gosec:
+      excludes:
+        - G115
+    mnd:
+      ignored-files:
+        - examples/.*
+      ignored-functions:
+        - context.WithTimeout
+        - strconv.ParseComplex
+    nestif:
+      min-complexity: 9
+    revive:
+      rules:
+        - name: blank-imports
+          disabled: true
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+      enable:
+        - assign-expr
+      disable:
+        - append
+        - decl
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - perfsprint
+        path: _test\.go
+      - path: (.+)\.go$
+        text: if statements should only be cuddled with assignments
+      - path: (.+)\.go$
+        text: if statements should only be cuddled with assignments used in the if statement itself
+      - path: (.+)\.go$
+        text: assignments should only be cuddled with other assignments
+    paths:
+      - apis
+      - api
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - apis
+      - api
+      - third_party$
+      - builtin$
+      - examples$
