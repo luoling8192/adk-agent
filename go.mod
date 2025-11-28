@@ -12,6 +12,7 @@ require (
 	github.com/nekomeowww/fo v1.6.1
 	github.com/pgvector/pgvector-go v0.3.0
 	github.com/samber/lo v1.52.0
+	github.com/sourcegraph/conc v0.3.0
 )
 
 require (

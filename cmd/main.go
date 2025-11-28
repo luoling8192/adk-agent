@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,10 +19,13 @@ import (
 	"github.com/luoling8192/adk-agent/internal/datastore"
 	"github.com/nekomeowww/fo"
 	"github.com/samber/lo"
+	"github.com/sourcegraph/conc"
 )
 
 const (
-	defaultDatabaseURL = "postgresql://postgres:postgres@localhost:5432/adk-agent"
+	defaultDatabaseURL    = "postgresql://postgres:postgres@localhost:5432/adk-agent"
+	defaultMaxReplyLength = 20
+	hoursPerDay           = 24 * time.Hour
 )
 
 func truncateRunes(s string, n int) string {
@@ -119,76 +123,82 @@ func main() {
 		return
 	}
 
-	var timeRange time.Duration
-	var timeRangeStr string
-	err = survey.AskOne(&survey.Select{
-		Message: "Select a time range to inspect:",
-		Options: []string{
-			"1 hour",
-			"1 day",
-		},
-		Default: "1 day",
-	}, &timeRangeStr)
+	var dayCount string
+	err = survey.AskOne(&survey.Input{
+		Message: "Select a time range to inspect (day):",
+		Default: "1",
+	}, &dayCount)
 	if err != nil {
 		slog.Error("selection aborted", "error", err)
 		return
 	}
 
-	switch timeRangeStr {
-	case "1 hour":
-		timeRange = time.Hour
-	case "1 day":
-		timeRange = 24 * time.Hour //nolint:mnd
-	}
-
-	messages, err := client.ChatMessage.Query().
-		Where(
-			chatmessage.InChatID(grouped[selectedIdx].InChatID),
-			chatmessage.ContentNEQ(""),
-			chatmessage.PlatformTimestampGTE(time.Now().Add(-timeRange).Unix()),
-			chatmessage.PlatformTimestampLTE(time.Now().Unix()),
-		).
-		Select(
-			chatmessage.FieldFromName,
-			chatmessage.FieldContent,
-			chatmessage.FieldReplyToID,
-			chatmessage.FieldPlatformTimestamp,
-		).
-		Order(chatmessage.ByPlatformTimestamp(sql.OrderDesc())).
-		All(ctx)
+	dayCountInt, err := strconv.Atoi(dayCount)
 	if err != nil {
-		slog.Error("failed to get chat messages", "error", err)
+		slog.Error("failed to parse day count", "error", err)
 		return
 	}
 
-	slog.Info("Chat messages", "count", len(messages))
+	var wg conc.WaitGroup
+	for day := range dayCountInt {
+		wg.Go(func() {
+			start := time.Now().Add(-time.Duration(day) * hoursPerDay)
+			end := start.Add(hoursPerDay)
 
-	msgs := make([]string, 0, len(messages))
-	for _, message := range messages {
-		replyMsg := ""
-		if message.ReplyToID != "" {
-			replyContent, err := client.ChatMessage.Query().
+			slog.Info("Fetching messages", "start", start, "end", end)
+
+			messages, err := client.ChatMessage.Query().
 				Where(
-					chatmessage.PlatformMessageID(message.ReplyToID),
+					chatmessage.InChatID(grouped[selectedIdx].InChatID),
 					chatmessage.ContentNEQ(""),
+					chatmessage.PlatformTimestampGTE(start.Unix()),
+					chatmessage.PlatformTimestampLTE(end.Unix()),
 				).
-				Select(chatmessage.FieldContent).
-				First(ctx)
+				Select(
+					chatmessage.FieldFromName,
+					chatmessage.FieldContent,
+					chatmessage.FieldReplyToID,
+					chatmessage.FieldPlatformTimestamp,
+				).
+				Order(chatmessage.ByPlatformTimestamp(sql.OrderDesc())).
+				All(ctx)
 			if err != nil {
-				slog.Error("failed to get reply message", "error", err)
-				continue
+				slog.Error("failed to get chat messages", "error", err)
+				return
 			}
 
-			replyMsg = fmt.Sprintf("(reply to: %s)", truncateRunes(replyContent.Content, 20)) //nolint:mnd
-		}
+			slog.Info("Chat messages", "count", len(messages))
 
-		msgs = append(msgs, fmt.Sprintf("[%s] %s: %s %s",
-			time.Unix(message.PlatformTimestamp, 0).Format("2006-01-02 15:04:05"),
-			message.FromName,
-			message.Content,
-			replyMsg,
-		))
+			msgs := make([]string, 0, len(messages))
+			for _, message := range messages {
+				replyMsg := ""
+				if message.ReplyToID != "" {
+					replyContent, err := client.ChatMessage.Query().
+						Where(
+							chatmessage.PlatformMessageID(message.ReplyToID),
+							chatmessage.ContentNEQ(""),
+						).
+						Select(chatmessage.FieldContent).
+						First(ctx)
+					if err != nil {
+						slog.Error("failed to get reply message", "error", err)
+						continue
+					}
+
+					replyMsg = fmt.Sprintf("(reply to: %s)", truncateRunes(replyContent.Content, defaultMaxReplyLength))
+				}
+
+				msgs = append(msgs, fmt.Sprintf("[%s] %s: %s %s",
+					time.Unix(message.PlatformTimestamp, 0).Format("2006-01-02 15:04:05"),
+					message.FromName,
+					message.Content,
+					replyMsg,
+				))
+			}
+
+			fmt.Println(strings.Join(msgs, "\n"))
+		})
 	}
 
-	fmt.Println(strings.Join(msgs, "\n"))
+	wg.Wait()
 }
