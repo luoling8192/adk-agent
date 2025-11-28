@@ -26,9 +26,13 @@ linters:
     - testpackage
     - varnamelen
     - wrapcheck
+    - wsl
   settings:
+    sloglint:
+      key-naming-case: snake
+      attr-only: true
     dupl:
-      threshold: 600
+      threshold: 150
     gocritic:
       disabled-checks:
         - ifElseChain
