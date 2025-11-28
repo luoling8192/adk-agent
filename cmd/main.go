@@ -142,11 +142,14 @@ func main() {
 	var wg conc.WaitGroup
 	for day := range dayCountInt {
 		wg.Go(func() {
+			durationStart := time.Now()
+
 			start := time.Now().Add(-time.Duration(day) * hoursPerDay)
 			end := start.Add(hoursPerDay)
 
 			slog.Info("Fetching messages", "start", start, "end", end)
 
+			queryDurationStart := time.Now()
 			messages, err := client.ChatMessage.Query().
 				Where(
 					chatmessage.InChatID(grouped[selectedIdx].InChatID),
@@ -159,6 +162,7 @@ func main() {
 					chatmessage.FieldContent,
 					chatmessage.FieldReplyToID,
 					chatmessage.FieldPlatformTimestamp,
+					chatmessage.FieldPlatformMessageID,
 				).
 				Order(chatmessage.ByPlatformTimestamp(sql.OrderDesc())).
 				All(ctx)
@@ -167,28 +171,33 @@ func main() {
 				return
 			}
 
-			slog.Info("Chat messages", "count", len(messages))
+			slog.Info("Chat messages fetched", "count", len(messages), "query_duration", time.Since(queryDurationStart))
 
-			msgs := make([]string, 0, len(messages))
+			formattedMsgs := make([]string, 0, len(messages))
 			for _, message := range messages {
 				replyMsg := ""
 				if message.ReplyToID != "" {
-					replyContent, err := client.ChatMessage.Query().
-						Where(
-							chatmessage.PlatformMessageID(message.ReplyToID),
-							chatmessage.ContentNEQ(""),
-						).
-						Select(chatmessage.FieldContent).
-						First(ctx)
-					if err != nil {
-						slog.Error("failed to get reply message", "error", err)
-						continue
-					}
+					// replyContent, err := client.ChatMessage.Query().
+					// 	Where(
+					// 		chatmessage.PlatformMessageID(message.ReplyToID),
+					// 		chatmessage.ContentNEQ(""),
+					// 	).
+					// 	Select(chatmessage.FieldContent).
+					// 	First(ctx)
+					// if err != nil {
+					// 	slog.Error("failed to get reply message", "error", err)
+					// 	continue
+					// }
 
-					replyMsg = fmt.Sprintf("(reply to: %s)", truncateRunes(replyContent.Content, defaultMaxReplyLength))
+					replyContent, ok := lo.Find(messages, func(m *ent.ChatMessage) bool {
+						return m.PlatformMessageID == message.ReplyToID
+					})
+					if ok {
+						replyMsg = fmt.Sprintf("(reply to: %s)", truncateRunes(replyContent.Content, defaultMaxReplyLength))
+					}
 				}
 
-				msgs = append(msgs, fmt.Sprintf("[%s] %s: %s %s",
+				formattedMsgs = append(formattedMsgs, fmt.Sprintf("[%s] %s: %s %s",
 					time.Unix(message.PlatformTimestamp, 0).Format("2006-01-02 15:04:05"),
 					message.FromName,
 					message.Content,
@@ -196,7 +205,9 @@ func main() {
 				))
 			}
 
-			fmt.Println(strings.Join(msgs, "\n"))
+			fmt.Println(strings.Join(formattedMsgs, "\n"))
+
+			slog.Info("Time taken", "duration", time.Since(durationStart))
 		})
 	}
 
