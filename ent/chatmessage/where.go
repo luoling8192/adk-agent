@@ -3,9 +3,12 @@
 package chatmessage
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/predicate"
+	pgvector "github.com/pgvector/pgvector-go"
 )
 
 // ID filters vertices based on their ID field.
@@ -116,6 +119,36 @@ func ReplyToID(v string) predicate.ChatMessage {
 // PlatformTimestamp applies equality check predicate on the "platform_timestamp" field. It's identical to PlatformTimestampEQ.
 func PlatformTimestamp(v int64) predicate.ChatMessage {
 	return predicate.ChatMessage(sql.FieldEQ(FieldPlatformTimestamp, v))
+}
+
+// ContentVector1536 applies equality check predicate on the "content_vector_1536" field. It's identical to ContentVector1536EQ.
+func ContentVector1536(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector1536, v))
+}
+
+// ContentVector1024 applies equality check predicate on the "content_vector_1024" field. It's identical to ContentVector1024EQ.
+func ContentVector1024(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector1024, v))
+}
+
+// ContentVector768 applies equality check predicate on the "content_vector_768" field. It's identical to ContentVector768EQ.
+func ContentVector768(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector768, v))
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// UpdatedAt applies equality check predicate on the "updated_at" field. It's identical to UpdatedAtEQ.
+func UpdatedAt(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldUpdatedAt, v))
+}
+
+// DeletedAt applies equality check predicate on the "deleted_at" field. It's identical to DeletedAtEQ.
+func DeletedAt(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldDeletedAt, v))
 }
 
 // PlatformEQ applies the EQ predicate on the "platform" field.
@@ -851,6 +884,256 @@ func PlatformTimestampLT(v int64) predicate.ChatMessage {
 // PlatformTimestampLTE applies the LTE predicate on the "platform_timestamp" field.
 func PlatformTimestampLTE(v int64) predicate.ChatMessage {
 	return predicate.ChatMessage(sql.FieldLTE(FieldPlatformTimestamp, v))
+}
+
+// ContentVector1536EQ applies the EQ predicate on the "content_vector_1536" field.
+func ContentVector1536EQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector1536, v))
+}
+
+// ContentVector1536NEQ applies the NEQ predicate on the "content_vector_1536" field.
+func ContentVector1536NEQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldContentVector1536, v))
+}
+
+// ContentVector1536In applies the In predicate on the "content_vector_1536" field.
+func ContentVector1536In(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldContentVector1536, vs...))
+}
+
+// ContentVector1536NotIn applies the NotIn predicate on the "content_vector_1536" field.
+func ContentVector1536NotIn(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldContentVector1536, vs...))
+}
+
+// ContentVector1536GT applies the GT predicate on the "content_vector_1536" field.
+func ContentVector1536GT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldContentVector1536, v))
+}
+
+// ContentVector1536GTE applies the GTE predicate on the "content_vector_1536" field.
+func ContentVector1536GTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldContentVector1536, v))
+}
+
+// ContentVector1536LT applies the LT predicate on the "content_vector_1536" field.
+func ContentVector1536LT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldContentVector1536, v))
+}
+
+// ContentVector1536LTE applies the LTE predicate on the "content_vector_1536" field.
+func ContentVector1536LTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldContentVector1536, v))
+}
+
+// ContentVector1024EQ applies the EQ predicate on the "content_vector_1024" field.
+func ContentVector1024EQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector1024, v))
+}
+
+// ContentVector1024NEQ applies the NEQ predicate on the "content_vector_1024" field.
+func ContentVector1024NEQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldContentVector1024, v))
+}
+
+// ContentVector1024In applies the In predicate on the "content_vector_1024" field.
+func ContentVector1024In(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldContentVector1024, vs...))
+}
+
+// ContentVector1024NotIn applies the NotIn predicate on the "content_vector_1024" field.
+func ContentVector1024NotIn(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldContentVector1024, vs...))
+}
+
+// ContentVector1024GT applies the GT predicate on the "content_vector_1024" field.
+func ContentVector1024GT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldContentVector1024, v))
+}
+
+// ContentVector1024GTE applies the GTE predicate on the "content_vector_1024" field.
+func ContentVector1024GTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldContentVector1024, v))
+}
+
+// ContentVector1024LT applies the LT predicate on the "content_vector_1024" field.
+func ContentVector1024LT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldContentVector1024, v))
+}
+
+// ContentVector1024LTE applies the LTE predicate on the "content_vector_1024" field.
+func ContentVector1024LTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldContentVector1024, v))
+}
+
+// ContentVector768EQ applies the EQ predicate on the "content_vector_768" field.
+func ContentVector768EQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldContentVector768, v))
+}
+
+// ContentVector768NEQ applies the NEQ predicate on the "content_vector_768" field.
+func ContentVector768NEQ(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldContentVector768, v))
+}
+
+// ContentVector768In applies the In predicate on the "content_vector_768" field.
+func ContentVector768In(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldContentVector768, vs...))
+}
+
+// ContentVector768NotIn applies the NotIn predicate on the "content_vector_768" field.
+func ContentVector768NotIn(vs ...pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldContentVector768, vs...))
+}
+
+// ContentVector768GT applies the GT predicate on the "content_vector_768" field.
+func ContentVector768GT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldContentVector768, v))
+}
+
+// ContentVector768GTE applies the GTE predicate on the "content_vector_768" field.
+func ContentVector768GTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldContentVector768, v))
+}
+
+// ContentVector768LT applies the LT predicate on the "content_vector_768" field.
+func ContentVector768LT(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldContentVector768, v))
+}
+
+// ContentVector768LTE applies the LTE predicate on the "content_vector_768" field.
+func ContentVector768LTE(v pgvector.Vector) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldContentVector768, v))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// UpdatedAtEQ applies the EQ predicate on the "updated_at" field.
+func UpdatedAtEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldUpdatedAt, v))
+}
+
+// UpdatedAtNEQ applies the NEQ predicate on the "updated_at" field.
+func UpdatedAtNEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldUpdatedAt, v))
+}
+
+// UpdatedAtIn applies the In predicate on the "updated_at" field.
+func UpdatedAtIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldUpdatedAt, vs...))
+}
+
+// UpdatedAtNotIn applies the NotIn predicate on the "updated_at" field.
+func UpdatedAtNotIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldUpdatedAt, vs...))
+}
+
+// UpdatedAtGT applies the GT predicate on the "updated_at" field.
+func UpdatedAtGT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldUpdatedAt, v))
+}
+
+// UpdatedAtGTE applies the GTE predicate on the "updated_at" field.
+func UpdatedAtGTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldUpdatedAt, v))
+}
+
+// UpdatedAtLT applies the LT predicate on the "updated_at" field.
+func UpdatedAtLT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldUpdatedAt, v))
+}
+
+// UpdatedAtLTE applies the LTE predicate on the "updated_at" field.
+func UpdatedAtLTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldUpdatedAt, v))
+}
+
+// DeletedAtEQ applies the EQ predicate on the "deleted_at" field.
+func DeletedAtEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtNEQ applies the NEQ predicate on the "deleted_at" field.
+func DeletedAtNEQ(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNEQ(FieldDeletedAt, v))
+}
+
+// DeletedAtIn applies the In predicate on the "deleted_at" field.
+func DeletedAtIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtNotIn applies the NotIn predicate on the "deleted_at" field.
+func DeletedAtNotIn(vs ...time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotIn(FieldDeletedAt, vs...))
+}
+
+// DeletedAtGT applies the GT predicate on the "deleted_at" field.
+func DeletedAtGT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGT(FieldDeletedAt, v))
+}
+
+// DeletedAtGTE applies the GTE predicate on the "deleted_at" field.
+func DeletedAtGTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldGTE(FieldDeletedAt, v))
+}
+
+// DeletedAtLT applies the LT predicate on the "deleted_at" field.
+func DeletedAtLT(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLT(FieldDeletedAt, v))
+}
+
+// DeletedAtLTE applies the LTE predicate on the "deleted_at" field.
+func DeletedAtLTE(v time.Time) predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldLTE(FieldDeletedAt, v))
+}
+
+// DeletedAtIsNil applies the IsNil predicate on the "deleted_at" field.
+func DeletedAtIsNil() predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldIsNull(FieldDeletedAt))
+}
+
+// DeletedAtNotNil applies the NotNil predicate on the "deleted_at" field.
+func DeletedAtNotNil() predicate.ChatMessage {
+	return predicate.ChatMessage(sql.FieldNotNull(FieldDeletedAt))
 }
 
 // And groups predicates with the AND operator between them.

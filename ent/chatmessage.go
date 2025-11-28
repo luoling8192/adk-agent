@@ -6,11 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	pgvector "github.com/pgvector/pgvector-go"
 )
 
 // ChatMessage is the model entity for the ChatMessage schema.
@@ -44,8 +46,20 @@ type ChatMessage struct {
 	ReplyToID string `json:"reply_to_id,omitempty"`
 	// PlatformTimestamp holds the value of the "platform_timestamp" field.
 	PlatformTimestamp int64 `json:"platform_timestamp,omitempty"`
+	// ContentVector1536 holds the value of the "content_vector_1536" field.
+	ContentVector1536 pgvector.Vector `json:"content_vector_1536,omitempty"`
+	// ContentVector1024 holds the value of the "content_vector_1024" field.
+	ContentVector1024 pgvector.Vector `json:"content_vector_1024,omitempty"`
+	// ContentVector768 holds the value of the "content_vector_768" field.
+	ContentVector768 pgvector.Vector `json:"content_vector_768,omitempty"`
 	// JiebaTokens holds the value of the "jieba_tokens" field.
-	JiebaTokens  []string `json:"jieba_tokens,omitempty"`
+	JiebaTokens []string `json:"jieba_tokens,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// DeletedAt holds the value of the "deleted_at" field.
+	DeletedAt    time.Time `json:"deleted_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -58,12 +72,16 @@ func (*ChatMessage) scanValues(columns []string) ([]any, error) {
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		case chatmessage.FieldJiebaTokens:
 			values[i] = new([]byte)
+		case chatmessage.FieldContentVector1536, chatmessage.FieldContentVector1024, chatmessage.FieldContentVector768:
+			values[i] = new(pgvector.Vector)
 		case chatmessage.FieldIsReply:
 			values[i] = new(sql.NullBool)
 		case chatmessage.FieldPlatformTimestamp:
 			values[i] = new(sql.NullInt64)
 		case chatmessage.FieldPlatform, chatmessage.FieldPlatformMessageID, chatmessage.FieldFromID, chatmessage.FieldFromName, chatmessage.FieldInChatID, chatmessage.FieldInChatType, chatmessage.FieldContent, chatmessage.FieldReplyToName, chatmessage.FieldReplyToID:
 			values[i] = new(sql.NullString)
+		case chatmessage.FieldCreatedAt, chatmessage.FieldUpdatedAt, chatmessage.FieldDeletedAt:
+			values[i] = new(sql.NullTime)
 		case chatmessage.FieldID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -167,6 +185,24 @@ func (_m *ChatMessage) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.PlatformTimestamp = value.Int64
 			}
+		case chatmessage.FieldContentVector1536:
+			if value, ok := values[i].(*pgvector.Vector); !ok {
+				return fmt.Errorf("unexpected type %T for field content_vector_1536", values[i])
+			} else if value != nil {
+				_m.ContentVector1536 = *value
+			}
+		case chatmessage.FieldContentVector1024:
+			if value, ok := values[i].(*pgvector.Vector); !ok {
+				return fmt.Errorf("unexpected type %T for field content_vector_1024", values[i])
+			} else if value != nil {
+				_m.ContentVector1024 = *value
+			}
+		case chatmessage.FieldContentVector768:
+			if value, ok := values[i].(*pgvector.Vector); !ok {
+				return fmt.Errorf("unexpected type %T for field content_vector_768", values[i])
+			} else if value != nil {
+				_m.ContentVector768 = *value
+			}
 		case chatmessage.FieldJiebaTokens:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field jieba_tokens", values[i])
@@ -174,6 +210,24 @@ func (_m *ChatMessage) assignValues(columns []string, values []any) error {
 				if err := json.Unmarshal(*value, &_m.JiebaTokens); err != nil {
 					return fmt.Errorf("unmarshal field jieba_tokens: %w", err)
 				}
+			}
+		case chatmessage.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				_m.CreatedAt = value.Time
+			}
+		case chatmessage.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				_m.UpdatedAt = value.Time
+			}
+		case chatmessage.FieldDeletedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
+			} else if value.Valid {
+				_m.DeletedAt = value.Time
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -254,8 +308,26 @@ func (_m *ChatMessage) String() string {
 	builder.WriteString("platform_timestamp=")
 	builder.WriteString(fmt.Sprintf("%v", _m.PlatformTimestamp))
 	builder.WriteString(", ")
+	builder.WriteString("content_vector_1536=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector1536))
+	builder.WriteString(", ")
+	builder.WriteString("content_vector_1024=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector1024))
+	builder.WriteString(", ")
+	builder.WriteString("content_vector_768=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ContentVector768))
+	builder.WriteString(", ")
 	builder.WriteString("jieba_tokens=")
 	builder.WriteString(fmt.Sprintf("%v", _m.JiebaTokens))
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("updated_at=")
+	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("deleted_at=")
+	builder.WriteString(_m.DeletedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

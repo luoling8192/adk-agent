@@ -1,10 +1,15 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
+	"github.com/pgvector/pgvector-go"
 )
 
 // ChatMessageType is a custom Go type for chat message type (not strictly enforced in DB schema).
@@ -45,11 +50,26 @@ func (ChatMessage) Fields() []ent.Field {
 		field.Int64("platform_timestamp").Default(0),
 
 		// Vector fields, use []float32 or custom types + annotations as needed for your backend.
-		// field.Other("content_vector_1536", []float32{}).Optional().Nillable(),
-		// field.Other("content_vector_1024", []float32{}).Optional().Nillable(),
-		// field.Other("content_vector_768", []float32{}).Optional().Nillable(),
+		field.Other("content_vector_1536", pgvector.Vector{}).
+			SchemaType(map[string]string{
+				dialect.Postgres: "vector(1536)",
+			}),
+
+		field.Other("content_vector_1024", pgvector.Vector{}).
+			SchemaType(map[string]string{
+				dialect.Postgres: "vector(1024)",
+			}),
+
+		field.Other("content_vector_768", pgvector.Vector{}).
+			SchemaType(map[string]string{
+				dialect.Postgres: "vector(768)",
+			}),
 
 		field.JSON("jieba_tokens", []string{}).Default([]string{}),
+
+		field.Time("created_at").Default(time.Now),
+		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
+		field.Time("deleted_at").Optional(),
 	}
 }
 
@@ -59,9 +79,21 @@ func (ChatMessage) Indexes() []ent.Index {
 		index.Fields("platform", "platform_message_id", "in_chat_id", "owner_account_id").Unique(),
 
 		// Vector indices (annotate with DB/PG-specific ops as needed in migration)
-		// index.Fields("content_vector_1536"),
-		// index.Fields("content_vector_1024"),
-		// index.Fields("content_vector_768"),
+		index.Fields("content_vector_1536").
+			Annotations(
+				entsql.IndexType("hnsw"),
+				entsql.OpClass("vector_l2_ops"),
+			),
+		index.Fields("content_vector_1024").
+			Annotations(
+				entsql.IndexType("hnsw"),
+				entsql.OpClass("vector_l2_ops"),
+			),
+		index.Fields("content_vector_768").
+			Annotations(
+				entsql.IndexType("hnsw"),
+				entsql.OpClass("vector_l2_ops"),
+			),
 
 		// Gin index for jieba_tokens (annotate in SQL/migration scripts as needed)
 		index.Fields("jieba_tokens"),

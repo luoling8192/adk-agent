@@ -3,6 +3,8 @@
 package chatmessage
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 )
@@ -38,8 +40,20 @@ const (
 	FieldReplyToID = "reply_to_id"
 	// FieldPlatformTimestamp holds the string denoting the platform_timestamp field in the database.
 	FieldPlatformTimestamp = "platform_timestamp"
+	// FieldContentVector1536 holds the string denoting the content_vector_1536 field in the database.
+	FieldContentVector1536 = "content_vector_1536"
+	// FieldContentVector1024 holds the string denoting the content_vector_1024 field in the database.
+	FieldContentVector1024 = "content_vector_1024"
+	// FieldContentVector768 holds the string denoting the content_vector_768 field in the database.
+	FieldContentVector768 = "content_vector_768"
 	// FieldJiebaTokens holds the string denoting the jieba_tokens field in the database.
 	FieldJiebaTokens = "jieba_tokens"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
+	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
+	FieldDeletedAt = "deleted_at"
 	// Table holds the table name of the chatmessage in the database.
 	Table = "chat_messages"
 )
@@ -60,7 +74,13 @@ var Columns = []string{
 	FieldReplyToName,
 	FieldReplyToID,
 	FieldPlatformTimestamp,
+	FieldContentVector1536,
+	FieldContentVector1024,
+	FieldContentVector768,
 	FieldJiebaTokens,
+	FieldCreatedAt,
+	FieldUpdatedAt,
+	FieldDeletedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -116,6 +136,12 @@ var (
 	DefaultPlatformTimestamp int64
 	// DefaultJiebaTokens holds the default value on creation for the "jieba_tokens" field.
 	DefaultJiebaTokens []string
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -191,4 +217,34 @@ func ByReplyToID(opts ...sql.OrderTermOption) OrderOption {
 // ByPlatformTimestamp orders the results by the platform_timestamp field.
 func ByPlatformTimestamp(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPlatformTimestamp, opts...).ToFunc()
+}
+
+// ByContentVector1536 orders the results by the content_vector_1536 field.
+func ByContentVector1536(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContentVector1536, opts...).ToFunc()
+}
+
+// ByContentVector1024 orders the results by the content_vector_1024 field.
+func ByContentVector1024(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContentVector1024, opts...).ToFunc()
+}
+
+// ByContentVector768 orders the results by the content_vector_768 field.
+func ByContentVector768(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldContentVector768, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByDeletedAt orders the results by the deleted_at field.
+func ByDeletedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDeletedAt, opts...).ToFunc()
 }

@@ -7,12 +7,14 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
 	"github.com/luoling8192/adk-agent/ent/predicate"
+	pgvector "github.com/pgvector/pgvector-go"
 )
 
 const (
@@ -47,8 +49,14 @@ type ChatMessageMutation struct {
 	reply_to_id           *string
 	platform_timestamp    *int64
 	addplatform_timestamp *int64
+	content_vector_1536   *pgvector.Vector
+	content_vector_1024   *pgvector.Vector
+	content_vector_768    *pgvector.Vector
 	jieba_tokens          *[]string
 	appendjieba_tokens    []string
+	created_at            *time.Time
+	updated_at            *time.Time
+	deleted_at            *time.Time
 	clearedFields         map[string]struct{}
 	done                  bool
 	oldValue              func(context.Context) (*ChatMessage, error)
@@ -673,6 +681,114 @@ func (m *ChatMessageMutation) ResetPlatformTimestamp() {
 	m.addplatform_timestamp = nil
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (m *ChatMessageMutation) SetContentVector1536(pg pgvector.Vector) {
+	m.content_vector_1536 = &pg
+}
+
+// ContentVector1536 returns the value of the "content_vector_1536" field in the mutation.
+func (m *ChatMessageMutation) ContentVector1536() (r pgvector.Vector, exists bool) {
+	v := m.content_vector_1536
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContentVector1536 returns the old "content_vector_1536" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldContentVector1536(ctx context.Context) (v pgvector.Vector, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContentVector1536 is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContentVector1536 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContentVector1536: %w", err)
+	}
+	return oldValue.ContentVector1536, nil
+}
+
+// ResetContentVector1536 resets all changes to the "content_vector_1536" field.
+func (m *ChatMessageMutation) ResetContentVector1536() {
+	m.content_vector_1536 = nil
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (m *ChatMessageMutation) SetContentVector1024(pg pgvector.Vector) {
+	m.content_vector_1024 = &pg
+}
+
+// ContentVector1024 returns the value of the "content_vector_1024" field in the mutation.
+func (m *ChatMessageMutation) ContentVector1024() (r pgvector.Vector, exists bool) {
+	v := m.content_vector_1024
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContentVector1024 returns the old "content_vector_1024" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldContentVector1024(ctx context.Context) (v pgvector.Vector, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContentVector1024 is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContentVector1024 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContentVector1024: %w", err)
+	}
+	return oldValue.ContentVector1024, nil
+}
+
+// ResetContentVector1024 resets all changes to the "content_vector_1024" field.
+func (m *ChatMessageMutation) ResetContentVector1024() {
+	m.content_vector_1024 = nil
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (m *ChatMessageMutation) SetContentVector768(pg pgvector.Vector) {
+	m.content_vector_768 = &pg
+}
+
+// ContentVector768 returns the value of the "content_vector_768" field in the mutation.
+func (m *ChatMessageMutation) ContentVector768() (r pgvector.Vector, exists bool) {
+	v := m.content_vector_768
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContentVector768 returns the old "content_vector_768" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldContentVector768(ctx context.Context) (v pgvector.Vector, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContentVector768 is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContentVector768 requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContentVector768: %w", err)
+	}
+	return oldValue.ContentVector768, nil
+}
+
+// ResetContentVector768 resets all changes to the "content_vector_768" field.
+func (m *ChatMessageMutation) ResetContentVector768() {
+	m.content_vector_768 = nil
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (m *ChatMessageMutation) SetJiebaTokens(s []string) {
 	m.jieba_tokens = &s
@@ -724,6 +840,127 @@ func (m *ChatMessageMutation) ResetJiebaTokens() {
 	m.appendjieba_tokens = nil
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (m *ChatMessageMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ChatMessageMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ChatMessageMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *ChatMessageMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *ChatMessageMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *ChatMessageMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *ChatMessageMutation) SetDeletedAt(t time.Time) {
+	m.deleted_at = &t
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *ChatMessageMutation) DeletedAt() (r time.Time, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the ChatMessage entity.
+// If the ChatMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChatMessageMutation) OldDeletedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (m *ChatMessageMutation) ClearDeletedAt() {
+	m.deleted_at = nil
+	m.clearedFields[chatmessage.FieldDeletedAt] = struct{}{}
+}
+
+// DeletedAtCleared returns if the "deleted_at" field was cleared in this mutation.
+func (m *ChatMessageMutation) DeletedAtCleared() bool {
+	_, ok := m.clearedFields[chatmessage.FieldDeletedAt]
+	return ok
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *ChatMessageMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	delete(m.clearedFields, chatmessage.FieldDeletedAt)
+}
+
 // Where appends a list predicates to the ChatMessageMutation builder.
 func (m *ChatMessageMutation) Where(ps ...predicate.ChatMessage) {
 	m.predicates = append(m.predicates, ps...)
@@ -758,7 +995,7 @@ func (m *ChatMessageMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ChatMessageMutation) Fields() []string {
-	fields := make([]string, 0, 14)
+	fields := make([]string, 0, 20)
 	if m.platform != nil {
 		fields = append(fields, chatmessage.FieldPlatform)
 	}
@@ -798,8 +1035,26 @@ func (m *ChatMessageMutation) Fields() []string {
 	if m.platform_timestamp != nil {
 		fields = append(fields, chatmessage.FieldPlatformTimestamp)
 	}
+	if m.content_vector_1536 != nil {
+		fields = append(fields, chatmessage.FieldContentVector1536)
+	}
+	if m.content_vector_1024 != nil {
+		fields = append(fields, chatmessage.FieldContentVector1024)
+	}
+	if m.content_vector_768 != nil {
+		fields = append(fields, chatmessage.FieldContentVector768)
+	}
 	if m.jieba_tokens != nil {
 		fields = append(fields, chatmessage.FieldJiebaTokens)
+	}
+	if m.created_at != nil {
+		fields = append(fields, chatmessage.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, chatmessage.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, chatmessage.FieldDeletedAt)
 	}
 	return fields
 }
@@ -835,8 +1090,20 @@ func (m *ChatMessageMutation) Field(name string) (ent.Value, bool) {
 		return m.ReplyToID()
 	case chatmessage.FieldPlatformTimestamp:
 		return m.PlatformTimestamp()
+	case chatmessage.FieldContentVector1536:
+		return m.ContentVector1536()
+	case chatmessage.FieldContentVector1024:
+		return m.ContentVector1024()
+	case chatmessage.FieldContentVector768:
+		return m.ContentVector768()
 	case chatmessage.FieldJiebaTokens:
 		return m.JiebaTokens()
+	case chatmessage.FieldCreatedAt:
+		return m.CreatedAt()
+	case chatmessage.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case chatmessage.FieldDeletedAt:
+		return m.DeletedAt()
 	}
 	return nil, false
 }
@@ -872,8 +1139,20 @@ func (m *ChatMessageMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldReplyToID(ctx)
 	case chatmessage.FieldPlatformTimestamp:
 		return m.OldPlatformTimestamp(ctx)
+	case chatmessage.FieldContentVector1536:
+		return m.OldContentVector1536(ctx)
+	case chatmessage.FieldContentVector1024:
+		return m.OldContentVector1024(ctx)
+	case chatmessage.FieldContentVector768:
+		return m.OldContentVector768(ctx)
 	case chatmessage.FieldJiebaTokens:
 		return m.OldJiebaTokens(ctx)
+	case chatmessage.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case chatmessage.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case chatmessage.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown ChatMessage field %s", name)
 }
@@ -974,12 +1253,54 @@ func (m *ChatMessageMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPlatformTimestamp(v)
 		return nil
+	case chatmessage.FieldContentVector1536:
+		v, ok := value.(pgvector.Vector)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContentVector1536(v)
+		return nil
+	case chatmessage.FieldContentVector1024:
+		v, ok := value.(pgvector.Vector)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContentVector1024(v)
+		return nil
+	case chatmessage.FieldContentVector768:
+		v, ok := value.(pgvector.Vector)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContentVector768(v)
+		return nil
 	case chatmessage.FieldJiebaTokens:
 		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetJiebaTokens(v)
+		return nil
+	case chatmessage.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case chatmessage.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case chatmessage.FieldDeletedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ChatMessage field %s", name)
@@ -1032,6 +1353,9 @@ func (m *ChatMessageMutation) ClearedFields() []string {
 	if m.FieldCleared(chatmessage.FieldOwnerAccountID) {
 		fields = append(fields, chatmessage.FieldOwnerAccountID)
 	}
+	if m.FieldCleared(chatmessage.FieldDeletedAt) {
+		fields = append(fields, chatmessage.FieldDeletedAt)
+	}
 	return fields
 }
 
@@ -1051,6 +1375,9 @@ func (m *ChatMessageMutation) ClearField(name string) error {
 		return nil
 	case chatmessage.FieldOwnerAccountID:
 		m.ClearOwnerAccountID()
+		return nil
+	case chatmessage.FieldDeletedAt:
+		m.ClearDeletedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown ChatMessage nullable field %s", name)
@@ -1099,8 +1426,26 @@ func (m *ChatMessageMutation) ResetField(name string) error {
 	case chatmessage.FieldPlatformTimestamp:
 		m.ResetPlatformTimestamp()
 		return nil
+	case chatmessage.FieldContentVector1536:
+		m.ResetContentVector1536()
+		return nil
+	case chatmessage.FieldContentVector1024:
+		m.ResetContentVector1024()
+		return nil
+	case chatmessage.FieldContentVector768:
+		m.ResetContentVector768()
+		return nil
 	case chatmessage.FieldJiebaTokens:
 		m.ResetJiebaTokens()
+		return nil
+	case chatmessage.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case chatmessage.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case chatmessage.FieldDeletedAt:
+		m.ResetDeletedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown ChatMessage field %s", name)

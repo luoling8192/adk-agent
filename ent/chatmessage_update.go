@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -15,6 +16,7 @@ import (
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
 	"github.com/luoling8192/adk-agent/ent/internal"
 	"github.com/luoling8192/adk-agent/ent/predicate"
+	pgvector "github.com/pgvector/pgvector-go"
 )
 
 // ChatMessageUpdate is the builder for updating ChatMessage entities.
@@ -231,6 +233,48 @@ func (_u *ChatMessageUpdate) AddPlatformTimestamp(v int64) *ChatMessageUpdate {
 	return _u
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (_u *ChatMessageUpdate) SetContentVector1536(v pgvector.Vector) *ChatMessageUpdate {
+	_u.mutation.SetContentVector1536(v)
+	return _u
+}
+
+// SetNillableContentVector1536 sets the "content_vector_1536" field if the given value is not nil.
+func (_u *ChatMessageUpdate) SetNillableContentVector1536(v *pgvector.Vector) *ChatMessageUpdate {
+	if v != nil {
+		_u.SetContentVector1536(*v)
+	}
+	return _u
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (_u *ChatMessageUpdate) SetContentVector1024(v pgvector.Vector) *ChatMessageUpdate {
+	_u.mutation.SetContentVector1024(v)
+	return _u
+}
+
+// SetNillableContentVector1024 sets the "content_vector_1024" field if the given value is not nil.
+func (_u *ChatMessageUpdate) SetNillableContentVector1024(v *pgvector.Vector) *ChatMessageUpdate {
+	if v != nil {
+		_u.SetContentVector1024(*v)
+	}
+	return _u
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (_u *ChatMessageUpdate) SetContentVector768(v pgvector.Vector) *ChatMessageUpdate {
+	_u.mutation.SetContentVector768(v)
+	return _u
+}
+
+// SetNillableContentVector768 sets the "content_vector_768" field if the given value is not nil.
+func (_u *ChatMessageUpdate) SetNillableContentVector768(v *pgvector.Vector) *ChatMessageUpdate {
+	if v != nil {
+		_u.SetContentVector768(*v)
+	}
+	return _u
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (_u *ChatMessageUpdate) SetJiebaTokens(v []string) *ChatMessageUpdate {
 	_u.mutation.SetJiebaTokens(v)
@@ -243,6 +287,46 @@ func (_u *ChatMessageUpdate) AppendJiebaTokens(v []string) *ChatMessageUpdate {
 	return _u
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (_u *ChatMessageUpdate) SetCreatedAt(v time.Time) *ChatMessageUpdate {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *ChatMessageUpdate) SetNillableCreatedAt(v *time.Time) *ChatMessageUpdate {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
+	return _u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *ChatMessageUpdate) SetUpdatedAt(v time.Time) *ChatMessageUpdate {
+	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *ChatMessageUpdate) SetDeletedAt(v time.Time) *ChatMessageUpdate {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *ChatMessageUpdate) SetNillableDeletedAt(v *time.Time) *ChatMessageUpdate {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *ChatMessageUpdate) ClearDeletedAt() *ChatMessageUpdate {
+	_u.mutation.ClearDeletedAt()
+	return _u
+}
+
 // Mutation returns the ChatMessageMutation object of the builder.
 func (_u *ChatMessageUpdate) Mutation() *ChatMessageMutation {
 	return _u.mutation
@@ -250,6 +334,7 @@ func (_u *ChatMessageUpdate) Mutation() *ChatMessageMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *ChatMessageUpdate) Save(ctx context.Context) (int, error) {
+	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -272,6 +357,14 @@ func (_u *ChatMessageUpdate) Exec(ctx context.Context) error {
 func (_u *ChatMessageUpdate) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_u *ChatMessageUpdate) defaults() {
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := chatmessage.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -385,6 +478,15 @@ func (_u *ChatMessageUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	if value, ok := _u.mutation.AddedPlatformTimestamp(); ok {
 		_spec.AddField(chatmessage.FieldPlatformTimestamp, field.TypeInt64, value)
 	}
+	if value, ok := _u.mutation.ContentVector1536(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1536, field.TypeOther, value)
+	}
+	if value, ok := _u.mutation.ContentVector1024(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1024, field.TypeOther, value)
+	}
+	if value, ok := _u.mutation.ContentVector768(); ok {
+		_spec.SetField(chatmessage.FieldContentVector768, field.TypeOther, value)
+	}
 	if value, ok := _u.mutation.JiebaTokens(); ok {
 		_spec.SetField(chatmessage.FieldJiebaTokens, field.TypeJSON, value)
 	}
@@ -392,6 +494,18 @@ func (_u *ChatMessageUpdate) sqlSave(ctx context.Context) (_node int, err error)
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, chatmessage.FieldJiebaTokens, value)
 		})
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(chatmessage.FieldDeletedAt, field.TypeTime)
 	}
 	_spec.Node.Schema = _u.schemaConfig.ChatMessage
 	ctx = internal.NewSchemaConfigContext(ctx, _u.schemaConfig)
@@ -616,6 +730,48 @@ func (_u *ChatMessageUpdateOne) AddPlatformTimestamp(v int64) *ChatMessageUpdate
 	return _u
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (_u *ChatMessageUpdateOne) SetContentVector1536(v pgvector.Vector) *ChatMessageUpdateOne {
+	_u.mutation.SetContentVector1536(v)
+	return _u
+}
+
+// SetNillableContentVector1536 sets the "content_vector_1536" field if the given value is not nil.
+func (_u *ChatMessageUpdateOne) SetNillableContentVector1536(v *pgvector.Vector) *ChatMessageUpdateOne {
+	if v != nil {
+		_u.SetContentVector1536(*v)
+	}
+	return _u
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (_u *ChatMessageUpdateOne) SetContentVector1024(v pgvector.Vector) *ChatMessageUpdateOne {
+	_u.mutation.SetContentVector1024(v)
+	return _u
+}
+
+// SetNillableContentVector1024 sets the "content_vector_1024" field if the given value is not nil.
+func (_u *ChatMessageUpdateOne) SetNillableContentVector1024(v *pgvector.Vector) *ChatMessageUpdateOne {
+	if v != nil {
+		_u.SetContentVector1024(*v)
+	}
+	return _u
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (_u *ChatMessageUpdateOne) SetContentVector768(v pgvector.Vector) *ChatMessageUpdateOne {
+	_u.mutation.SetContentVector768(v)
+	return _u
+}
+
+// SetNillableContentVector768 sets the "content_vector_768" field if the given value is not nil.
+func (_u *ChatMessageUpdateOne) SetNillableContentVector768(v *pgvector.Vector) *ChatMessageUpdateOne {
+	if v != nil {
+		_u.SetContentVector768(*v)
+	}
+	return _u
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (_u *ChatMessageUpdateOne) SetJiebaTokens(v []string) *ChatMessageUpdateOne {
 	_u.mutation.SetJiebaTokens(v)
@@ -625,6 +781,46 @@ func (_u *ChatMessageUpdateOne) SetJiebaTokens(v []string) *ChatMessageUpdateOne
 // AppendJiebaTokens appends value to the "jieba_tokens" field.
 func (_u *ChatMessageUpdateOne) AppendJiebaTokens(v []string) *ChatMessageUpdateOne {
 	_u.mutation.AppendJiebaTokens(v)
+	return _u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_u *ChatMessageUpdateOne) SetCreatedAt(v time.Time) *ChatMessageUpdateOne {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *ChatMessageUpdateOne) SetNillableCreatedAt(v *time.Time) *ChatMessageUpdateOne {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
+	return _u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *ChatMessageUpdateOne) SetUpdatedAt(v time.Time) *ChatMessageUpdateOne {
+	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_u *ChatMessageUpdateOne) SetDeletedAt(v time.Time) *ChatMessageUpdateOne {
+	_u.mutation.SetDeletedAt(v)
+	return _u
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_u *ChatMessageUpdateOne) SetNillableDeletedAt(v *time.Time) *ChatMessageUpdateOne {
+	if v != nil {
+		_u.SetDeletedAt(*v)
+	}
+	return _u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (_u *ChatMessageUpdateOne) ClearDeletedAt() *ChatMessageUpdateOne {
+	_u.mutation.ClearDeletedAt()
 	return _u
 }
 
@@ -648,6 +844,7 @@ func (_u *ChatMessageUpdateOne) Select(field string, fields ...string) *ChatMess
 
 // Save executes the query and returns the updated ChatMessage entity.
 func (_u *ChatMessageUpdateOne) Save(ctx context.Context) (*ChatMessage, error) {
+	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -670,6 +867,14 @@ func (_u *ChatMessageUpdateOne) Exec(ctx context.Context) error {
 func (_u *ChatMessageUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_u *ChatMessageUpdateOne) defaults() {
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := chatmessage.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -800,6 +1005,15 @@ func (_u *ChatMessageUpdateOne) sqlSave(ctx context.Context) (_node *ChatMessage
 	if value, ok := _u.mutation.AddedPlatformTimestamp(); ok {
 		_spec.AddField(chatmessage.FieldPlatformTimestamp, field.TypeInt64, value)
 	}
+	if value, ok := _u.mutation.ContentVector1536(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1536, field.TypeOther, value)
+	}
+	if value, ok := _u.mutation.ContentVector1024(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1024, field.TypeOther, value)
+	}
+	if value, ok := _u.mutation.ContentVector768(); ok {
+		_spec.SetField(chatmessage.FieldContentVector768, field.TypeOther, value)
+	}
 	if value, ok := _u.mutation.JiebaTokens(); ok {
 		_spec.SetField(chatmessage.FieldJiebaTokens, field.TypeJSON, value)
 	}
@@ -807,6 +1021,18 @@ func (_u *ChatMessageUpdateOne) sqlSave(ctx context.Context) (_node *ChatMessage
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, chatmessage.FieldJiebaTokens, value)
 		})
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.DeletedAt(); ok {
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+	}
+	if _u.mutation.DeletedAtCleared() {
+		_spec.ClearField(chatmessage.FieldDeletedAt, field.TypeTime)
 	}
 	_spec.Node.Schema = _u.schemaConfig.ChatMessage
 	ctx = internal.NewSchemaConfigContext(ctx, _u.schemaConfig)

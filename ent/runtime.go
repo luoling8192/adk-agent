@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
 	"github.com/luoling8192/adk-agent/schema"
@@ -77,9 +79,19 @@ func init() {
 	// chatmessage.DefaultPlatformTimestamp holds the default value on creation for the platform_timestamp field.
 	chatmessage.DefaultPlatformTimestamp = chatmessageDescPlatformTimestamp.Default.(int64)
 	// chatmessageDescJiebaTokens is the schema descriptor for jieba_tokens field.
-	chatmessageDescJiebaTokens := chatmessageFields[14].Descriptor()
+	chatmessageDescJiebaTokens := chatmessageFields[17].Descriptor()
 	// chatmessage.DefaultJiebaTokens holds the default value on creation for the jieba_tokens field.
 	chatmessage.DefaultJiebaTokens = chatmessageDescJiebaTokens.Default.([]string)
+	// chatmessageDescCreatedAt is the schema descriptor for created_at field.
+	chatmessageDescCreatedAt := chatmessageFields[18].Descriptor()
+	// chatmessage.DefaultCreatedAt holds the default value on creation for the created_at field.
+	chatmessage.DefaultCreatedAt = chatmessageDescCreatedAt.Default.(func() time.Time)
+	// chatmessageDescUpdatedAt is the schema descriptor for updated_at field.
+	chatmessageDescUpdatedAt := chatmessageFields[19].Descriptor()
+	// chatmessage.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	chatmessage.DefaultUpdatedAt = chatmessageDescUpdatedAt.Default.(func() time.Time)
+	// chatmessage.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	chatmessage.UpdateDefaultUpdatedAt = chatmessageDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// chatmessageDescID is the schema descriptor for id field.
 	chatmessageDescID := chatmessageFields[0].Descriptor()
 	// chatmessage.DefaultID holds the default value on creation for the id field.

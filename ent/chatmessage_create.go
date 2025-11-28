@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -13,6 +14,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	pgvector "github.com/pgvector/pgvector-go"
 )
 
 // ChatMessageCreate is the builder for creating a ChatMessage entity.
@@ -205,9 +207,69 @@ func (_c *ChatMessageCreate) SetNillablePlatformTimestamp(v *int64) *ChatMessage
 	return _c
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (_c *ChatMessageCreate) SetContentVector1536(v pgvector.Vector) *ChatMessageCreate {
+	_c.mutation.SetContentVector1536(v)
+	return _c
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (_c *ChatMessageCreate) SetContentVector1024(v pgvector.Vector) *ChatMessageCreate {
+	_c.mutation.SetContentVector1024(v)
+	return _c
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (_c *ChatMessageCreate) SetContentVector768(v pgvector.Vector) *ChatMessageCreate {
+	_c.mutation.SetContentVector768(v)
+	return _c
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (_c *ChatMessageCreate) SetJiebaTokens(v []string) *ChatMessageCreate {
 	_c.mutation.SetJiebaTokens(v)
+	return _c
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_c *ChatMessageCreate) SetCreatedAt(v time.Time) *ChatMessageCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *ChatMessageCreate) SetNillableCreatedAt(v *time.Time) *ChatMessageCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
+	}
+	return _c
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_c *ChatMessageCreate) SetUpdatedAt(v time.Time) *ChatMessageCreate {
+	_c.mutation.SetUpdatedAt(v)
+	return _c
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_c *ChatMessageCreate) SetNillableUpdatedAt(v *time.Time) *ChatMessageCreate {
+	if v != nil {
+		_c.SetUpdatedAt(*v)
+	}
+	return _c
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (_c *ChatMessageCreate) SetDeletedAt(v time.Time) *ChatMessageCreate {
+	_c.mutation.SetDeletedAt(v)
+	return _c
+}
+
+// SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
+func (_c *ChatMessageCreate) SetNillableDeletedAt(v *time.Time) *ChatMessageCreate {
+	if v != nil {
+		_c.SetDeletedAt(*v)
+	}
 	return _c
 }
 
@@ -308,6 +370,14 @@ func (_c *ChatMessageCreate) defaults() {
 		v := chatmessage.DefaultJiebaTokens
 		_c.mutation.SetJiebaTokens(v)
 	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := chatmessage.DefaultCreatedAt()
+		_c.mutation.SetCreatedAt(v)
+	}
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		v := chatmessage.DefaultUpdatedAt()
+		_c.mutation.SetUpdatedAt(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := chatmessage.DefaultID()
 		_c.mutation.SetID(v)
@@ -394,8 +464,23 @@ func (_c *ChatMessageCreate) check() error {
 	if _, ok := _c.mutation.PlatformTimestamp(); !ok {
 		return &ValidationError{Name: "platform_timestamp", err: errors.New(`ent: missing required field "ChatMessage.platform_timestamp"`)}
 	}
+	if _, ok := _c.mutation.ContentVector1536(); !ok {
+		return &ValidationError{Name: "content_vector_1536", err: errors.New(`ent: missing required field "ChatMessage.content_vector_1536"`)}
+	}
+	if _, ok := _c.mutation.ContentVector1024(); !ok {
+		return &ValidationError{Name: "content_vector_1024", err: errors.New(`ent: missing required field "ChatMessage.content_vector_1024"`)}
+	}
+	if _, ok := _c.mutation.ContentVector768(); !ok {
+		return &ValidationError{Name: "content_vector_768", err: errors.New(`ent: missing required field "ChatMessage.content_vector_768"`)}
+	}
 	if _, ok := _c.mutation.JiebaTokens(); !ok {
 		return &ValidationError{Name: "jieba_tokens", err: errors.New(`ent: missing required field "ChatMessage.jieba_tokens"`)}
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "ChatMessage.created_at"`)}
+	}
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "ChatMessage.updated_at"`)}
 	}
 	return nil
 }
@@ -486,9 +571,33 @@ func (_c *ChatMessageCreate) createSpec() (*ChatMessage, *sqlgraph.CreateSpec) {
 		_spec.SetField(chatmessage.FieldPlatformTimestamp, field.TypeInt64, value)
 		_node.PlatformTimestamp = value
 	}
+	if value, ok := _c.mutation.ContentVector1536(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1536, field.TypeOther, value)
+		_node.ContentVector1536 = value
+	}
+	if value, ok := _c.mutation.ContentVector1024(); ok {
+		_spec.SetField(chatmessage.FieldContentVector1024, field.TypeOther, value)
+		_node.ContentVector1024 = value
+	}
+	if value, ok := _c.mutation.ContentVector768(); ok {
+		_spec.SetField(chatmessage.FieldContentVector768, field.TypeOther, value)
+		_node.ContentVector768 = value
+	}
 	if value, ok := _c.mutation.JiebaTokens(); ok {
 		_spec.SetField(chatmessage.FieldJiebaTokens, field.TypeJSON, value)
 		_node.JiebaTokens = value
+	}
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
+	}
+	if value, ok := _c.mutation.UpdatedAt(); ok {
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+		_node.UpdatedAt = value
+	}
+	if value, ok := _c.mutation.DeletedAt(); ok {
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+		_node.DeletedAt = value
 	}
 	return _node, _spec
 }
@@ -716,6 +825,42 @@ func (u *ChatMessageUpsert) AddPlatformTimestamp(v int64) *ChatMessageUpsert {
 	return u
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (u *ChatMessageUpsert) SetContentVector1536(v pgvector.Vector) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldContentVector1536, v)
+	return u
+}
+
+// UpdateContentVector1536 sets the "content_vector_1536" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateContentVector1536() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldContentVector1536)
+	return u
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (u *ChatMessageUpsert) SetContentVector1024(v pgvector.Vector) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldContentVector1024, v)
+	return u
+}
+
+// UpdateContentVector1024 sets the "content_vector_1024" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateContentVector1024() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldContentVector1024)
+	return u
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (u *ChatMessageUpsert) SetContentVector768(v pgvector.Vector) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldContentVector768, v)
+	return u
+}
+
+// UpdateContentVector768 sets the "content_vector_768" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateContentVector768() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldContentVector768)
+	return u
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (u *ChatMessageUpsert) SetJiebaTokens(v []string) *ChatMessageUpsert {
 	u.Set(chatmessage.FieldJiebaTokens, v)
@@ -725,6 +870,48 @@ func (u *ChatMessageUpsert) SetJiebaTokens(v []string) *ChatMessageUpsert {
 // UpdateJiebaTokens sets the "jieba_tokens" field to the value that was provided on create.
 func (u *ChatMessageUpsert) UpdateJiebaTokens() *ChatMessageUpsert {
 	u.SetExcluded(chatmessage.FieldJiebaTokens)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ChatMessageUpsert) SetCreatedAt(v time.Time) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateCreatedAt() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldCreatedAt)
+	return u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ChatMessageUpsert) SetUpdatedAt(v time.Time) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldUpdatedAt, v)
+	return u
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateUpdatedAt() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldUpdatedAt)
+	return u
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *ChatMessageUpsert) SetDeletedAt(v time.Time) *ChatMessageUpsert {
+	u.Set(chatmessage.FieldDeletedAt, v)
+	return u
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *ChatMessageUpsert) UpdateDeletedAt() *ChatMessageUpsert {
+	u.SetExcluded(chatmessage.FieldDeletedAt)
+	return u
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *ChatMessageUpsert) ClearDeletedAt() *ChatMessageUpsert {
+	u.SetNull(chatmessage.FieldDeletedAt)
 	return u
 }
 
@@ -979,6 +1166,48 @@ func (u *ChatMessageUpsertOne) UpdatePlatformTimestamp() *ChatMessageUpsertOne {
 	})
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (u *ChatMessageUpsertOne) SetContentVector1536(v pgvector.Vector) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector1536(v)
+	})
+}
+
+// UpdateContentVector1536 sets the "content_vector_1536" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateContentVector1536() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector1536()
+	})
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (u *ChatMessageUpsertOne) SetContentVector1024(v pgvector.Vector) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector1024(v)
+	})
+}
+
+// UpdateContentVector1024 sets the "content_vector_1024" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateContentVector1024() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector1024()
+	})
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (u *ChatMessageUpsertOne) SetContentVector768(v pgvector.Vector) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector768(v)
+	})
+}
+
+// UpdateContentVector768 sets the "content_vector_768" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateContentVector768() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector768()
+	})
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (u *ChatMessageUpsertOne) SetJiebaTokens(v []string) *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
@@ -990,6 +1219,55 @@ func (u *ChatMessageUpsertOne) SetJiebaTokens(v []string) *ChatMessageUpsertOne 
 func (u *ChatMessageUpsertOne) UpdateJiebaTokens() *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.UpdateJiebaTokens()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ChatMessageUpsertOne) SetCreatedAt(v time.Time) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateCreatedAt() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ChatMessageUpsertOne) SetUpdatedAt(v time.Time) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateUpdatedAt() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *ChatMessageUpsertOne) SetDeletedAt(v time.Time) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertOne) UpdateDeletedAt() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *ChatMessageUpsertOne) ClearDeletedAt() *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.ClearDeletedAt()
 	})
 }
 
@@ -1411,6 +1689,48 @@ func (u *ChatMessageUpsertBulk) UpdatePlatformTimestamp() *ChatMessageUpsertBulk
 	})
 }
 
+// SetContentVector1536 sets the "content_vector_1536" field.
+func (u *ChatMessageUpsertBulk) SetContentVector1536(v pgvector.Vector) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector1536(v)
+	})
+}
+
+// UpdateContentVector1536 sets the "content_vector_1536" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateContentVector1536() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector1536()
+	})
+}
+
+// SetContentVector1024 sets the "content_vector_1024" field.
+func (u *ChatMessageUpsertBulk) SetContentVector1024(v pgvector.Vector) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector1024(v)
+	})
+}
+
+// UpdateContentVector1024 sets the "content_vector_1024" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateContentVector1024() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector1024()
+	})
+}
+
+// SetContentVector768 sets the "content_vector_768" field.
+func (u *ChatMessageUpsertBulk) SetContentVector768(v pgvector.Vector) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetContentVector768(v)
+	})
+}
+
+// UpdateContentVector768 sets the "content_vector_768" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateContentVector768() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateContentVector768()
+	})
+}
+
 // SetJiebaTokens sets the "jieba_tokens" field.
 func (u *ChatMessageUpsertBulk) SetJiebaTokens(v []string) *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
@@ -1422,6 +1742,55 @@ func (u *ChatMessageUpsertBulk) SetJiebaTokens(v []string) *ChatMessageUpsertBul
 func (u *ChatMessageUpsertBulk) UpdateJiebaTokens() *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.UpdateJiebaTokens()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *ChatMessageUpsertBulk) SetCreatedAt(v time.Time) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateCreatedAt() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (u *ChatMessageUpsertBulk) SetUpdatedAt(v time.Time) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetUpdatedAt(v)
+	})
+}
+
+// UpdateUpdatedAt sets the "updated_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateUpdatedAt() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateUpdatedAt()
+	})
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (u *ChatMessageUpsertBulk) SetDeletedAt(v time.Time) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.SetDeletedAt(v)
+	})
+}
+
+// UpdateDeletedAt sets the "deleted_at" field to the value that was provided on create.
+func (u *ChatMessageUpsertBulk) UpdateDeletedAt() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.UpdateDeletedAt()
+	})
+}
+
+// ClearDeletedAt clears the value of the "deleted_at" field.
+func (u *ChatMessageUpsertBulk) ClearDeletedAt() *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.ClearDeletedAt()
 	})
 }
 

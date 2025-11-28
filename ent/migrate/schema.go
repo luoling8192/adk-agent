@@ -3,6 +3,7 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
@@ -24,7 +25,13 @@ var (
 		{Name: "reply_to_name", Type: field.TypeString, Default: ""},
 		{Name: "reply_to_id", Type: field.TypeString, Default: ""},
 		{Name: "platform_timestamp", Type: field.TypeInt64, Default: 0},
+		{Name: "content_vector_1536", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "vector(1536)"}},
+		{Name: "content_vector_1024", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "vector(1024)"}},
+		{Name: "content_vector_768", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "vector(768)"}},
 		{Name: "jieba_tokens", Type: field.TypeJSON},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
 	}
 	// ChatMessagesTable holds the schema information for the "chat_messages" table.
 	ChatMessagesTable = &schema.Table{
@@ -38,9 +45,36 @@ var (
 				Columns: []*schema.Column{ChatMessagesColumns[1], ChatMessagesColumns[2], ChatMessagesColumns[7], ChatMessagesColumns[6]},
 			},
 			{
-				Name:    "chatmessage_jieba_tokens",
+				Name:    "chatmessage_content_vector_1536",
 				Unique:  false,
 				Columns: []*schema.Column{ChatMessagesColumns[14]},
+				Annotation: &entsql.IndexAnnotation{
+					OpClass: "vector_l2_ops",
+					Type:    "hnsw",
+				},
+			},
+			{
+				Name:    "chatmessage_content_vector_1024",
+				Unique:  false,
+				Columns: []*schema.Column{ChatMessagesColumns[15]},
+				Annotation: &entsql.IndexAnnotation{
+					OpClass: "vector_l2_ops",
+					Type:    "hnsw",
+				},
+			},
+			{
+				Name:    "chatmessage_content_vector_768",
+				Unique:  false,
+				Columns: []*schema.Column{ChatMessagesColumns[16]},
+				Annotation: &entsql.IndexAnnotation{
+					OpClass: "vector_l2_ops",
+					Type:    "hnsw",
+				},
+			},
+			{
+				Name:    "chatmessage_jieba_tokens",
+				Unique:  false,
+				Columns: []*schema.Column{ChatMessagesColumns[17]},
 			},
 			{
 				Name:    "chatmessage_from_user_uuid",
