@@ -8,6 +8,7 @@ import "context"
 // that can be passed at runtime.
 type SchemaConfig struct {
 	ChatMessage string // ChatMessage table.
+	JoinedChat  string // JoinedChat table.
 }
 
 type schemaCtxKey struct{}

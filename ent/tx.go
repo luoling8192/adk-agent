@@ -16,6 +16,8 @@ type Tx struct {
 	config
 	// ChatMessage is the client for interacting with the ChatMessage builders.
 	ChatMessage *ChatMessageClient
+	// JoinedChat is the client for interacting with the JoinedChat builders.
+	JoinedChat *JoinedChatClient
 
 	// lazily loaded.
 	client     *Client
@@ -148,6 +150,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.ChatMessage = NewChatMessageClient(tx.config)
+	tx.JoinedChat = NewJoinedChatClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

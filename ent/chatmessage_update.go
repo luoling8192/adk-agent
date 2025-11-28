@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -288,42 +287,57 @@ func (_u *ChatMessageUpdate) AppendJiebaTokens(v []string) *ChatMessageUpdate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (_u *ChatMessageUpdate) SetCreatedAt(v time.Time) *ChatMessageUpdate {
+func (_u *ChatMessageUpdate) SetCreatedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.ResetCreatedAt()
 	_u.mutation.SetCreatedAt(v)
 	return _u
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (_u *ChatMessageUpdate) SetNillableCreatedAt(v *time.Time) *ChatMessageUpdate {
+func (_u *ChatMessageUpdate) SetNillableCreatedAt(v *int64) *ChatMessageUpdate {
 	if v != nil {
 		_u.SetCreatedAt(*v)
 	}
 	return _u
 }
 
+// AddCreatedAt adds value to the "created_at" field.
+func (_u *ChatMessageUpdate) AddCreatedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.AddCreatedAt(v)
+	return _u
+}
+
 // SetUpdatedAt sets the "updated_at" field.
-func (_u *ChatMessageUpdate) SetUpdatedAt(v time.Time) *ChatMessageUpdate {
+func (_u *ChatMessageUpdate) SetUpdatedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.ResetUpdatedAt()
 	_u.mutation.SetUpdatedAt(v)
 	return _u
 }
 
+// AddUpdatedAt adds value to the "updated_at" field.
+func (_u *ChatMessageUpdate) AddUpdatedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.AddUpdatedAt(v)
+	return _u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
-func (_u *ChatMessageUpdate) SetDeletedAt(v time.Time) *ChatMessageUpdate {
+func (_u *ChatMessageUpdate) SetDeletedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.ResetDeletedAt()
 	_u.mutation.SetDeletedAt(v)
 	return _u
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_u *ChatMessageUpdate) SetNillableDeletedAt(v *time.Time) *ChatMessageUpdate {
+func (_u *ChatMessageUpdate) SetNillableDeletedAt(v *int64) *ChatMessageUpdate {
 	if v != nil {
 		_u.SetDeletedAt(*v)
 	}
 	return _u
 }
 
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (_u *ChatMessageUpdate) ClearDeletedAt() *ChatMessageUpdate {
-	_u.mutation.ClearDeletedAt()
+// AddDeletedAt adds value to the "deleted_at" field.
+func (_u *ChatMessageUpdate) AddDeletedAt(v int64) *ChatMessageUpdate {
+	_u.mutation.AddDeletedAt(v)
 	return _u
 }
 
@@ -496,16 +510,22 @@ func (_u *ChatMessageUpdate) sqlSave(ctx context.Context) (_node int, err error)
 		})
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
-		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(chatmessage.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
-		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdatedAt(); ok {
+		_spec.AddField(chatmessage.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.DeletedAt(); ok {
-		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeInt64, value)
 	}
-	if _u.mutation.DeletedAtCleared() {
-		_spec.ClearField(chatmessage.FieldDeletedAt, field.TypeTime)
+	if value, ok := _u.mutation.AddedDeletedAt(); ok {
+		_spec.AddField(chatmessage.FieldDeletedAt, field.TypeInt64, value)
 	}
 	_spec.Node.Schema = _u.schemaConfig.ChatMessage
 	ctx = internal.NewSchemaConfigContext(ctx, _u.schemaConfig)
@@ -785,42 +805,57 @@ func (_u *ChatMessageUpdateOne) AppendJiebaTokens(v []string) *ChatMessageUpdate
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (_u *ChatMessageUpdateOne) SetCreatedAt(v time.Time) *ChatMessageUpdateOne {
+func (_u *ChatMessageUpdateOne) SetCreatedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.ResetCreatedAt()
 	_u.mutation.SetCreatedAt(v)
 	return _u
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (_u *ChatMessageUpdateOne) SetNillableCreatedAt(v *time.Time) *ChatMessageUpdateOne {
+func (_u *ChatMessageUpdateOne) SetNillableCreatedAt(v *int64) *ChatMessageUpdateOne {
 	if v != nil {
 		_u.SetCreatedAt(*v)
 	}
 	return _u
 }
 
+// AddCreatedAt adds value to the "created_at" field.
+func (_u *ChatMessageUpdateOne) AddCreatedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.AddCreatedAt(v)
+	return _u
+}
+
 // SetUpdatedAt sets the "updated_at" field.
-func (_u *ChatMessageUpdateOne) SetUpdatedAt(v time.Time) *ChatMessageUpdateOne {
+func (_u *ChatMessageUpdateOne) SetUpdatedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.ResetUpdatedAt()
 	_u.mutation.SetUpdatedAt(v)
 	return _u
 }
 
+// AddUpdatedAt adds value to the "updated_at" field.
+func (_u *ChatMessageUpdateOne) AddUpdatedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.AddUpdatedAt(v)
+	return _u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
-func (_u *ChatMessageUpdateOne) SetDeletedAt(v time.Time) *ChatMessageUpdateOne {
+func (_u *ChatMessageUpdateOne) SetDeletedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.ResetDeletedAt()
 	_u.mutation.SetDeletedAt(v)
 	return _u
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_u *ChatMessageUpdateOne) SetNillableDeletedAt(v *time.Time) *ChatMessageUpdateOne {
+func (_u *ChatMessageUpdateOne) SetNillableDeletedAt(v *int64) *ChatMessageUpdateOne {
 	if v != nil {
 		_u.SetDeletedAt(*v)
 	}
 	return _u
 }
 
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (_u *ChatMessageUpdateOne) ClearDeletedAt() *ChatMessageUpdateOne {
-	_u.mutation.ClearDeletedAt()
+// AddDeletedAt adds value to the "deleted_at" field.
+func (_u *ChatMessageUpdateOne) AddDeletedAt(v int64) *ChatMessageUpdateOne {
+	_u.mutation.AddDeletedAt(v)
 	return _u
 }
 
@@ -1023,16 +1058,22 @@ func (_u *ChatMessageUpdateOne) sqlSave(ctx context.Context) (_node *ChatMessage
 		})
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
-		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCreatedAt(); ok {
+		_spec.AddField(chatmessage.FieldCreatedAt, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
-		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUpdatedAt(); ok {
+		_spec.AddField(chatmessage.FieldUpdatedAt, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.DeletedAt(); ok {
-		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeInt64, value)
 	}
-	if _u.mutation.DeletedAtCleared() {
-		_spec.ClearField(chatmessage.FieldDeletedAt, field.TypeTime)
+	if value, ok := _u.mutation.AddedDeletedAt(); ok {
+		_spec.AddField(chatmessage.FieldDeletedAt, field.TypeInt64, value)
 	}
 	_spec.Node.Schema = _u.schemaConfig.ChatMessage
 	ctx = internal.NewSchemaConfigContext(ctx, _u.schemaConfig)

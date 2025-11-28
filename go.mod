@@ -8,7 +8,9 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/lmittmann/tint v1.1.2
+	github.com/mattn/go-runewidth v0.0.9
 	github.com/nekomeowww/fo v1.6.1
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pgvector/pgvector-go v0.3.0
 	github.com/samber/lo v1.52.0
 )

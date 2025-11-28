@@ -12,12 +12,6 @@ import (
 	"github.com/pgvector/pgvector-go"
 )
 
-// ChatMessageType is a custom Go type for chat message type (not strictly enforced in DB schema).
-type ChatMessageType string
-
-// JoinedChatType is a custom Go type for chat type (not strictly enforced in DB schema).
-type JoinedChatType string
-
 type ChatMessage struct {
 	ent.Schema
 }
@@ -67,9 +61,14 @@ func (ChatMessage) Fields() []ent.Field {
 
 		field.JSON("jieba_tokens", []string{}).Default([]string{}),
 
-		field.Time("created_at").Default(time.Now),
-		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
-		field.Time("deleted_at").Optional(),
+		field.Int64("created_at").
+			DefaultFunc(func() int64 { return time.Now().UnixMilli() }),
+
+		field.Int64("updated_at").
+			DefaultFunc(func() int64 { return time.Now().UnixMilli() }).
+			UpdateDefault(func() int64 { return time.Now().UnixMilli() }),
+
+		field.Int64("deleted_at").Default(0),
 	}
 }
 

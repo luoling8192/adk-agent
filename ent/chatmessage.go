@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -55,11 +54,11 @@ type ChatMessage struct {
 	// JiebaTokens holds the value of the "jieba_tokens" field.
 	JiebaTokens []string `json:"jieba_tokens,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	CreatedAt int64 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	UpdatedAt int64 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
-	DeletedAt    time.Time `json:"deleted_at,omitempty"`
+	DeletedAt    int64 `json:"deleted_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -76,12 +75,10 @@ func (*ChatMessage) scanValues(columns []string) ([]any, error) {
 			values[i] = new(pgvector.Vector)
 		case chatmessage.FieldIsReply:
 			values[i] = new(sql.NullBool)
-		case chatmessage.FieldPlatformTimestamp:
+		case chatmessage.FieldPlatformTimestamp, chatmessage.FieldCreatedAt, chatmessage.FieldUpdatedAt, chatmessage.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case chatmessage.FieldPlatform, chatmessage.FieldPlatformMessageID, chatmessage.FieldFromID, chatmessage.FieldFromName, chatmessage.FieldInChatID, chatmessage.FieldInChatType, chatmessage.FieldContent, chatmessage.FieldReplyToName, chatmessage.FieldReplyToID:
 			values[i] = new(sql.NullString)
-		case chatmessage.FieldCreatedAt, chatmessage.FieldUpdatedAt, chatmessage.FieldDeletedAt:
-			values[i] = new(sql.NullTime)
 		case chatmessage.FieldID:
 			values[i] = new(uuid.UUID)
 		default:
@@ -212,22 +209,22 @@ func (_m *ChatMessage) assignValues(columns []string, values []any) error {
 				}
 			}
 		case chatmessage.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				_m.CreatedAt = value.Time
+				_m.CreatedAt = value.Int64
 			}
 		case chatmessage.FieldUpdatedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
-				_m.UpdatedAt = value.Time
+				_m.UpdatedAt = value.Int64
 			}
 		case chatmessage.FieldDeletedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
+			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
 			} else if value.Valid {
-				_m.DeletedAt = value.Time
+				_m.DeletedAt = value.Int64
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -321,13 +318,13 @@ func (_m *ChatMessage) String() string {
 	builder.WriteString(fmt.Sprintf("%v", _m.JiebaTokens))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", _m.CreatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
-	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", _m.UpdatedAt))
 	builder.WriteString(", ")
 	builder.WriteString("deleted_at=")
-	builder.WriteString(_m.DeletedAt.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", _m.DeletedAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

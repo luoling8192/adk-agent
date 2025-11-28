@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -232,13 +231,13 @@ func (_c *ChatMessageCreate) SetJiebaTokens(v []string) *ChatMessageCreate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (_c *ChatMessageCreate) SetCreatedAt(v time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetCreatedAt(v int64) *ChatMessageCreate {
 	_c.mutation.SetCreatedAt(v)
 	return _c
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (_c *ChatMessageCreate) SetNillableCreatedAt(v *time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetNillableCreatedAt(v *int64) *ChatMessageCreate {
 	if v != nil {
 		_c.SetCreatedAt(*v)
 	}
@@ -246,13 +245,13 @@ func (_c *ChatMessageCreate) SetNillableCreatedAt(v *time.Time) *ChatMessageCrea
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (_c *ChatMessageCreate) SetUpdatedAt(v time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetUpdatedAt(v int64) *ChatMessageCreate {
 	_c.mutation.SetUpdatedAt(v)
 	return _c
 }
 
 // SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
-func (_c *ChatMessageCreate) SetNillableUpdatedAt(v *time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetNillableUpdatedAt(v *int64) *ChatMessageCreate {
 	if v != nil {
 		_c.SetUpdatedAt(*v)
 	}
@@ -260,13 +259,13 @@ func (_c *ChatMessageCreate) SetNillableUpdatedAt(v *time.Time) *ChatMessageCrea
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (_c *ChatMessageCreate) SetDeletedAt(v time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetDeletedAt(v int64) *ChatMessageCreate {
 	_c.mutation.SetDeletedAt(v)
 	return _c
 }
 
 // SetNillableDeletedAt sets the "deleted_at" field if the given value is not nil.
-func (_c *ChatMessageCreate) SetNillableDeletedAt(v *time.Time) *ChatMessageCreate {
+func (_c *ChatMessageCreate) SetNillableDeletedAt(v *int64) *ChatMessageCreate {
 	if v != nil {
 		_c.SetDeletedAt(*v)
 	}
@@ -378,6 +377,10 @@ func (_c *ChatMessageCreate) defaults() {
 		v := chatmessage.DefaultUpdatedAt()
 		_c.mutation.SetUpdatedAt(v)
 	}
+	if _, ok := _c.mutation.DeletedAt(); !ok {
+		v := chatmessage.DefaultDeletedAt
+		_c.mutation.SetDeletedAt(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := chatmessage.DefaultID()
 		_c.mutation.SetID(v)
@@ -481,6 +484,9 @@ func (_c *ChatMessageCreate) check() error {
 	}
 	if _, ok := _c.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "ChatMessage.updated_at"`)}
+	}
+	if _, ok := _c.mutation.DeletedAt(); !ok {
+		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "ChatMessage.deleted_at"`)}
 	}
 	return nil
 }
@@ -588,15 +594,15 @@ func (_c *ChatMessageCreate) createSpec() (*ChatMessage, *sqlgraph.CreateSpec) {
 		_node.JiebaTokens = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
-		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldCreatedAt, field.TypeInt64, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := _c.mutation.UpdatedAt(); ok {
-		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldUpdatedAt, field.TypeInt64, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := _c.mutation.DeletedAt(); ok {
-		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeTime, value)
+		_spec.SetField(chatmessage.FieldDeletedAt, field.TypeInt64, value)
 		_node.DeletedAt = value
 	}
 	return _node, _spec
@@ -874,7 +880,7 @@ func (u *ChatMessageUpsert) UpdateJiebaTokens() *ChatMessageUpsert {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *ChatMessageUpsert) SetCreatedAt(v time.Time) *ChatMessageUpsert {
+func (u *ChatMessageUpsert) SetCreatedAt(v int64) *ChatMessageUpsert {
 	u.Set(chatmessage.FieldCreatedAt, v)
 	return u
 }
@@ -885,8 +891,14 @@ func (u *ChatMessageUpsert) UpdateCreatedAt() *ChatMessageUpsert {
 	return u
 }
 
+// AddCreatedAt adds v to the "created_at" field.
+func (u *ChatMessageUpsert) AddCreatedAt(v int64) *ChatMessageUpsert {
+	u.Add(chatmessage.FieldCreatedAt, v)
+	return u
+}
+
 // SetUpdatedAt sets the "updated_at" field.
-func (u *ChatMessageUpsert) SetUpdatedAt(v time.Time) *ChatMessageUpsert {
+func (u *ChatMessageUpsert) SetUpdatedAt(v int64) *ChatMessageUpsert {
 	u.Set(chatmessage.FieldUpdatedAt, v)
 	return u
 }
@@ -897,8 +909,14 @@ func (u *ChatMessageUpsert) UpdateUpdatedAt() *ChatMessageUpsert {
 	return u
 }
 
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *ChatMessageUpsert) AddUpdatedAt(v int64) *ChatMessageUpsert {
+	u.Add(chatmessage.FieldUpdatedAt, v)
+	return u
+}
+
 // SetDeletedAt sets the "deleted_at" field.
-func (u *ChatMessageUpsert) SetDeletedAt(v time.Time) *ChatMessageUpsert {
+func (u *ChatMessageUpsert) SetDeletedAt(v int64) *ChatMessageUpsert {
 	u.Set(chatmessage.FieldDeletedAt, v)
 	return u
 }
@@ -909,9 +927,9 @@ func (u *ChatMessageUpsert) UpdateDeletedAt() *ChatMessageUpsert {
 	return u
 }
 
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (u *ChatMessageUpsert) ClearDeletedAt() *ChatMessageUpsert {
-	u.SetNull(chatmessage.FieldDeletedAt)
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *ChatMessageUpsert) AddDeletedAt(v int64) *ChatMessageUpsert {
+	u.Add(chatmessage.FieldDeletedAt, v)
 	return u
 }
 
@@ -1223,9 +1241,16 @@ func (u *ChatMessageUpsertOne) UpdateJiebaTokens() *ChatMessageUpsertOne {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *ChatMessageUpsertOne) SetCreatedAt(v time.Time) *ChatMessageUpsertOne {
+func (u *ChatMessageUpsertOne) SetCreatedAt(v int64) *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *ChatMessageUpsertOne) AddCreatedAt(v int64) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddCreatedAt(v)
 	})
 }
 
@@ -1237,9 +1262,16 @@ func (u *ChatMessageUpsertOne) UpdateCreatedAt() *ChatMessageUpsertOne {
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *ChatMessageUpsertOne) SetUpdatedAt(v time.Time) *ChatMessageUpsertOne {
+func (u *ChatMessageUpsertOne) SetUpdatedAt(v int64) *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *ChatMessageUpsertOne) AddUpdatedAt(v int64) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddUpdatedAt(v)
 	})
 }
 
@@ -1251,9 +1283,16 @@ func (u *ChatMessageUpsertOne) UpdateUpdatedAt() *ChatMessageUpsertOne {
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *ChatMessageUpsertOne) SetDeletedAt(v time.Time) *ChatMessageUpsertOne {
+func (u *ChatMessageUpsertOne) SetDeletedAt(v int64) *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *ChatMessageUpsertOne) AddDeletedAt(v int64) *ChatMessageUpsertOne {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddDeletedAt(v)
 	})
 }
 
@@ -1261,13 +1300,6 @@ func (u *ChatMessageUpsertOne) SetDeletedAt(v time.Time) *ChatMessageUpsertOne {
 func (u *ChatMessageUpsertOne) UpdateDeletedAt() *ChatMessageUpsertOne {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.UpdateDeletedAt()
-	})
-}
-
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (u *ChatMessageUpsertOne) ClearDeletedAt() *ChatMessageUpsertOne {
-	return u.Update(func(s *ChatMessageUpsert) {
-		s.ClearDeletedAt()
 	})
 }
 
@@ -1746,9 +1778,16 @@ func (u *ChatMessageUpsertBulk) UpdateJiebaTokens() *ChatMessageUpsertBulk {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *ChatMessageUpsertBulk) SetCreatedAt(v time.Time) *ChatMessageUpsertBulk {
+func (u *ChatMessageUpsertBulk) SetCreatedAt(v int64) *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetCreatedAt(v)
+	})
+}
+
+// AddCreatedAt adds v to the "created_at" field.
+func (u *ChatMessageUpsertBulk) AddCreatedAt(v int64) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddCreatedAt(v)
 	})
 }
 
@@ -1760,9 +1799,16 @@ func (u *ChatMessageUpsertBulk) UpdateCreatedAt() *ChatMessageUpsertBulk {
 }
 
 // SetUpdatedAt sets the "updated_at" field.
-func (u *ChatMessageUpsertBulk) SetUpdatedAt(v time.Time) *ChatMessageUpsertBulk {
+func (u *ChatMessageUpsertBulk) SetUpdatedAt(v int64) *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetUpdatedAt(v)
+	})
+}
+
+// AddUpdatedAt adds v to the "updated_at" field.
+func (u *ChatMessageUpsertBulk) AddUpdatedAt(v int64) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddUpdatedAt(v)
 	})
 }
 
@@ -1774,9 +1820,16 @@ func (u *ChatMessageUpsertBulk) UpdateUpdatedAt() *ChatMessageUpsertBulk {
 }
 
 // SetDeletedAt sets the "deleted_at" field.
-func (u *ChatMessageUpsertBulk) SetDeletedAt(v time.Time) *ChatMessageUpsertBulk {
+func (u *ChatMessageUpsertBulk) SetDeletedAt(v int64) *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.SetDeletedAt(v)
+	})
+}
+
+// AddDeletedAt adds v to the "deleted_at" field.
+func (u *ChatMessageUpsertBulk) AddDeletedAt(v int64) *ChatMessageUpsertBulk {
+	return u.Update(func(s *ChatMessageUpsert) {
+		s.AddDeletedAt(v)
 	})
 }
 
@@ -1784,13 +1837,6 @@ func (u *ChatMessageUpsertBulk) SetDeletedAt(v time.Time) *ChatMessageUpsertBulk
 func (u *ChatMessageUpsertBulk) UpdateDeletedAt() *ChatMessageUpsertBulk {
 	return u.Update(func(s *ChatMessageUpsert) {
 		s.UpdateDeletedAt()
-	})
-}
-
-// ClearDeletedAt clears the value of the "deleted_at" field.
-func (u *ChatMessageUpsertBulk) ClearDeletedAt() *ChatMessageUpsertBulk {
-	return u.Update(func(s *ChatMessageUpsert) {
-		s.ClearDeletedAt()
 	})
 }
 

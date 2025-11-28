@@ -29,9 +29,9 @@ var (
 		{Name: "content_vector_1024", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "vector(1024)"}},
 		{Name: "content_vector_768", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "vector(768)"}},
 		{Name: "jieba_tokens", Type: field.TypeJSON},
-		{Name: "created_at", Type: field.TypeTime},
-		{Name: "updated_at", Type: field.TypeTime},
-		{Name: "deleted_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_at", Type: field.TypeInt64},
+		{Name: "updated_at", Type: field.TypeInt64},
+		{Name: "deleted_at", Type: field.TypeInt64, Default: 0},
 	}
 	// ChatMessagesTable holds the schema information for the "chat_messages" table.
 	ChatMessagesTable = &schema.Table{
@@ -83,9 +83,34 @@ var (
 			},
 		},
 	}
+	// JoinedChatsColumns holds the columns for the "joined_chats" table.
+	JoinedChatsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "platform", Type: field.TypeString, Default: ""},
+		{Name: "chat_id", Type: field.TypeString, Default: ""},
+		{Name: "chat_name", Type: field.TypeString, Default: ""},
+		{Name: "chat_type", Type: field.TypeString, Default: "user"},
+		{Name: "dialog_date", Type: field.TypeInt64, Default: 0},
+		{Name: "created_at", Type: field.TypeInt64},
+		{Name: "updated_at", Type: field.TypeInt64},
+	}
+	// JoinedChatsTable holds the schema information for the "joined_chats" table.
+	JoinedChatsTable = &schema.Table{
+		Name:       "joined_chats",
+		Columns:    JoinedChatsColumns,
+		PrimaryKey: []*schema.Column{JoinedChatsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "platform_chat_id_unique_index",
+				Unique:  true,
+				Columns: []*schema.Column{JoinedChatsColumns[1], JoinedChatsColumns[2]},
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ChatMessagesTable,
+		JoinedChatsTable,
 	}
 )
 

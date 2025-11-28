@@ -4,16 +4,22 @@ dictionaryDefinitions: []
 dictionaries: []
 words:
   - adk
+  - chatmessage
   - entgo
   - entsql
   - godotenv
   - hnsw
   - jieba
+  - joho
   - lmittmann
   - luoling
   - nekomeowww
   - Nillable
+  - nolint
   - pgvector
+  - runewidth
   - samber
+  - tablewriter
+  - tabw
 ignoreWords: []
 import: []

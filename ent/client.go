@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	"github.com/luoling8192/adk-agent/ent/joinedchat"
 
 	stdsql "database/sql"
 
@@ -29,6 +30,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// ChatMessage is the client for interacting with the ChatMessage builders.
 	ChatMessage *ChatMessageClient
+	// JoinedChat is the client for interacting with the JoinedChat builders.
+	JoinedChat *JoinedChatClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -41,6 +44,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.ChatMessage = NewChatMessageClient(c.config)
+	c.JoinedChat = NewJoinedChatClient(c.config)
 }
 
 type (
@@ -136,6 +140,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:         ctx,
 		config:      cfg,
 		ChatMessage: NewChatMessageClient(cfg),
+		JoinedChat:  NewJoinedChatClient(cfg),
 	}, nil
 }
 
@@ -156,6 +161,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:         ctx,
 		config:      cfg,
 		ChatMessage: NewChatMessageClient(cfg),
+		JoinedChat:  NewJoinedChatClient(cfg),
 	}, nil
 }
 
@@ -185,12 +191,14 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.ChatMessage.Use(hooks...)
+	c.JoinedChat.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.ChatMessage.Intercept(interceptors...)
+	c.JoinedChat.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -198,6 +206,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *ChatMessageMutation:
 		return c.ChatMessage.mutate(ctx, m)
+	case *JoinedChatMutation:
+		return c.JoinedChat.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -336,13 +346,146 @@ func (c *ChatMessageClient) mutate(ctx context.Context, m *ChatMessageMutation) 
 	}
 }
 
+// JoinedChatClient is a client for the JoinedChat schema.
+type JoinedChatClient struct {
+	config
+}
+
+// NewJoinedChatClient returns a client for the JoinedChat from the given config.
+func NewJoinedChatClient(c config) *JoinedChatClient {
+	return &JoinedChatClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `joinedchat.Hooks(f(g(h())))`.
+func (c *JoinedChatClient) Use(hooks ...Hook) {
+	c.hooks.JoinedChat = append(c.hooks.JoinedChat, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `joinedchat.Intercept(f(g(h())))`.
+func (c *JoinedChatClient) Intercept(interceptors ...Interceptor) {
+	c.inters.JoinedChat = append(c.inters.JoinedChat, interceptors...)
+}
+
+// Create returns a builder for creating a JoinedChat entity.
+func (c *JoinedChatClient) Create() *JoinedChatCreate {
+	mutation := newJoinedChatMutation(c.config, OpCreate)
+	return &JoinedChatCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of JoinedChat entities.
+func (c *JoinedChatClient) CreateBulk(builders ...*JoinedChatCreate) *JoinedChatCreateBulk {
+	return &JoinedChatCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *JoinedChatClient) MapCreateBulk(slice any, setFunc func(*JoinedChatCreate, int)) *JoinedChatCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &JoinedChatCreateBulk{err: fmt.Errorf("calling to JoinedChatClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*JoinedChatCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &JoinedChatCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for JoinedChat.
+func (c *JoinedChatClient) Update() *JoinedChatUpdate {
+	mutation := newJoinedChatMutation(c.config, OpUpdate)
+	return &JoinedChatUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *JoinedChatClient) UpdateOne(_m *JoinedChat) *JoinedChatUpdateOne {
+	mutation := newJoinedChatMutation(c.config, OpUpdateOne, withJoinedChat(_m))
+	return &JoinedChatUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *JoinedChatClient) UpdateOneID(id uuid.UUID) *JoinedChatUpdateOne {
+	mutation := newJoinedChatMutation(c.config, OpUpdateOne, withJoinedChatID(id))
+	return &JoinedChatUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for JoinedChat.
+func (c *JoinedChatClient) Delete() *JoinedChatDelete {
+	mutation := newJoinedChatMutation(c.config, OpDelete)
+	return &JoinedChatDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *JoinedChatClient) DeleteOne(_m *JoinedChat) *JoinedChatDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *JoinedChatClient) DeleteOneID(id uuid.UUID) *JoinedChatDeleteOne {
+	builder := c.Delete().Where(joinedchat.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &JoinedChatDeleteOne{builder}
+}
+
+// Query returns a query builder for JoinedChat.
+func (c *JoinedChatClient) Query() *JoinedChatQuery {
+	return &JoinedChatQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeJoinedChat},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a JoinedChat entity by its id.
+func (c *JoinedChatClient) Get(ctx context.Context, id uuid.UUID) (*JoinedChat, error) {
+	return c.Query().Where(joinedchat.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *JoinedChatClient) GetX(ctx context.Context, id uuid.UUID) *JoinedChat {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *JoinedChatClient) Hooks() []Hook {
+	return c.hooks.JoinedChat
+}
+
+// Interceptors returns the client interceptors.
+func (c *JoinedChatClient) Interceptors() []Interceptor {
+	return c.inters.JoinedChat
+}
+
+func (c *JoinedChatClient) mutate(ctx context.Context, m *JoinedChatMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&JoinedChatCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&JoinedChatUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&JoinedChatUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&JoinedChatDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown JoinedChat mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		ChatMessage []ent.Hook
+		ChatMessage, JoinedChat []ent.Hook
 	}
 	inters struct {
-		ChatMessage []ent.Interceptor
+		ChatMessage, JoinedChat []ent.Interceptor
 	}
 )
 
