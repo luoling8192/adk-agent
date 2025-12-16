@@ -21,6 +21,7 @@ words:
   - runewidth
   - samber
   - sashabaranov
+  - sourcegraph
   - tablewriter
   - tabw
 ignoreWords: []
