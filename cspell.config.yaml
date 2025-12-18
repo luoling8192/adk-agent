@@ -18,6 +18,7 @@ words:
   - Nillable
   - nolint
   - pgvector
+  - promauto
   - runewidth
   - samber
   - sashabaranov

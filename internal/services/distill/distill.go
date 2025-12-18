@@ -12,6 +12,7 @@ import (
 	"github.com/luoling8192/adk-agent/ent/identity"
 	"github.com/luoling8192/adk-agent/internal/agent"
 	"github.com/luoling8192/adk-agent/internal/datastore"
+	"github.com/luoling8192/adk-agent/internal/metrics"
 	"github.com/samber/lo"
 )
 
@@ -36,8 +37,16 @@ func DistillOneRound(
 	selectedIdx int,
 	start, end time.Time,
 	llmClient *agent.LLMClient,
-) ([]agent.ExtractedItem, error) {
-	durationStart := time.Now()
+) (extractedItems []agent.ExtractedItem, err error) {
+	startTotal := time.Now()
+	defer func() {
+		status := "success"
+		if err != nil {
+			status = "error"
+		}
+		metrics.DistillDuration.WithLabelValues("total", status).Observe(time.Since(startTotal).Seconds())
+	}()
+
 	slog.Info("Fetching messages", "start", start, "end", end)
 
 	queryDurationStart := time.Now()
@@ -60,8 +69,11 @@ func DistillOneRound(
 		All(ctx)
 	if err != nil {
 		slog.Error("failed to get chat messages", "error", err)
+		metrics.DistillDuration.WithLabelValues("query_messages", "error").Observe(time.Since(queryDurationStart).Seconds())
 		return nil, err
 	}
+	metrics.DistillDuration.WithLabelValues("query_messages", "success").Observe(time.Since(queryDurationStart).Seconds())
+	metrics.DistillItemsCount.WithLabelValues("messages_fetched").Add(float64(len(messages)))
 
 	slog.Info("Chat messages fetched", "count", len(messages), "query_duration", time.Since(queryDurationStart))
 
@@ -69,18 +81,6 @@ func DistillOneRound(
 	for _, message := range messages {
 		replyMsg := ""
 		if message.ReplyToID != "" {
-			// replyContent, err := client.ChatMessage.Query().
-			// 	Where(
-			// 		chatmessage.PlatformMessageID(message.ReplyToID),
-			// 		chatmessage.ContentNEQ(""),
-			// 	).
-			// 	Select(chatmessage.FieldContent).
-			// 	First(ctx)
-			// if err != nil {
-			// 	slog.Error("failed to get reply message", "error", err)
-			// 	continue
-			// }
-
 			replyContent, ok := lo.Find(messages, func(m *ent.ChatMessage) bool {
 				return m.PlatformMessageID == message.ReplyToID
 			})
@@ -111,22 +111,28 @@ func DistillOneRound(
 		}
 	}
 
-	slog.Info("Messages processed", "count", len(formattedMsgs), "duration", time.Since(durationStart))
+	slog.Info("Messages processed", "count", len(formattedMsgs), "duration", time.Since(startTotal))
 
 	summaryDurationStart := time.Now()
 	summary, err := agent.SummaryMessages(ctx, llmClient, formattedMsgs)
 	if err != nil {
 		slog.Error("failed to summarize messages", "error", err)
+		metrics.DistillDuration.WithLabelValues("summarize", "error").Observe(time.Since(summaryDurationStart).Seconds())
 		return nil, err
 	}
+	metrics.DistillDuration.WithLabelValues("summarize", "success").Observe(time.Since(summaryDurationStart).Seconds())
 	slog.Info("Summary generated", "summary", summary, "duration", time.Since(summaryDurationStart))
 
 	extractedItemsDurationStart := time.Now()
-	extractedItems, err := agent.ExtractSummary(ctx, llmClient, summary)
+	extractedItems, err = agent.ExtractSummary(ctx, llmClient, summary)
 	if err != nil {
 		slog.Error("failed to extract summary", "error", err)
+		metrics.DistillDuration.WithLabelValues("extract", "error").Observe(time.Since(extractedItemsDurationStart).Seconds())
 		return nil, err
 	}
+	metrics.DistillDuration.WithLabelValues("extract", "success").Observe(time.Since(extractedItemsDurationStart).Seconds())
+	metrics.DistillItemsCount.WithLabelValues("items_extracted").Add(float64(len(extractedItems)))
+
 	slog.Info("Extracted items", "count", len(extractedItems), "duration", time.Since(extractedItemsDurationStart))
 
 	return extractedItems, nil

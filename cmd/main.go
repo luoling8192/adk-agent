@@ -16,6 +16,7 @@ import (
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
 	"github.com/luoling8192/adk-agent/internal/agent"
 	"github.com/luoling8192/adk-agent/internal/datastore"
+	"github.com/luoling8192/adk-agent/internal/metrics"
 	"github.com/luoling8192/adk-agent/internal/services/distill"
 	"github.com/nekomeowww/fo"
 	"github.com/samber/lo"
@@ -29,6 +30,7 @@ const (
 
 func main() {
 	_ = godotenv.Load()
+	metrics.StartMetricsServer(os.Getenv("METRICS_ADDR"))
 
 	ctx := context.Background()
 
