@@ -5,6 +5,8 @@ package ent
 import (
 	"github.com/google/uuid"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	"github.com/luoling8192/adk-agent/ent/event"
+	"github.com/luoling8192/adk-agent/ent/identity"
 	"github.com/luoling8192/adk-agent/ent/joinedchat"
 	"github.com/luoling8192/adk-agent/schema"
 )
@@ -99,6 +101,106 @@ func init() {
 	chatmessageDescID := chatmessageFields[0].Descriptor()
 	// chatmessage.DefaultID holds the default value on creation for the id field.
 	chatmessage.DefaultID = chatmessageDescID.Default.(func() uuid.UUID)
+	eventFields := schema.Event{}.Fields()
+	_ = eventFields
+	// eventDescPlatform is the schema descriptor for platform field.
+	eventDescPlatform := eventFields[1].Descriptor()
+	// event.DefaultPlatform holds the default value on creation for the platform field.
+	event.DefaultPlatform = eventDescPlatform.Default.(string)
+	// event.PlatformValidator is a validator for the "platform" field. It is called by the builders before save.
+	event.PlatformValidator = eventDescPlatform.Validators[0].(func(string) error)
+	// eventDescName is the schema descriptor for name field.
+	eventDescName := eventFields[2].Descriptor()
+	// event.DefaultName holds the default value on creation for the name field.
+	event.DefaultName = eventDescName.Default.(string)
+	// event.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	event.NameValidator = eventDescName.Validators[0].(func(string) error)
+	// eventDescDescription is the schema descriptor for description field.
+	eventDescDescription := eventFields[4].Descriptor()
+	// event.DefaultDescription holds the default value on creation for the description field.
+	event.DefaultDescription = eventDescDescription.Default.(string)
+	// event.DescriptionValidator is a validator for the "description" field. It is called by the builders before save.
+	event.DescriptionValidator = eventDescDescription.Validators[0].(func(string) error)
+	// eventDescFromName is the schema descriptor for from_name field.
+	eventDescFromName := eventFields[5].Descriptor()
+	// event.DefaultFromName holds the default value on creation for the from_name field.
+	event.DefaultFromName = eventDescFromName.Default.(string)
+	// event.FromNameValidator is a validator for the "from_name" field. It is called by the builders before save.
+	event.FromNameValidator = eventDescFromName.Validators[0].(func(string) error)
+	// eventDescInChatID is the schema descriptor for in_chat_id field.
+	eventDescInChatID := eventFields[6].Descriptor()
+	// event.DefaultInChatID holds the default value on creation for the in_chat_id field.
+	event.DefaultInChatID = eventDescInChatID.Default.(string)
+	// event.InChatIDValidator is a validator for the "in_chat_id" field. It is called by the builders before save.
+	event.InChatIDValidator = eventDescInChatID.Validators[0].(func(string) error)
+	// eventDescInChatType is the schema descriptor for in_chat_type field.
+	eventDescInChatType := eventFields[7].Descriptor()
+	// event.DefaultInChatType holds the default value on creation for the in_chat_type field.
+	event.DefaultInChatType = eventDescInChatType.Default.(string)
+	// event.InChatTypeValidator is a validator for the "in_chat_type" field. It is called by the builders before save.
+	event.InChatTypeValidator = eventDescInChatType.Validators[0].(func(string) error)
+	// eventDescPlatformTimestamp is the schema descriptor for platform_timestamp field.
+	eventDescPlatformTimestamp := eventFields[8].Descriptor()
+	// event.DefaultPlatformTimestamp holds the default value on creation for the platform_timestamp field.
+	event.DefaultPlatformTimestamp = eventDescPlatformTimestamp.Default.(int64)
+	// eventDescCreatedAt is the schema descriptor for created_at field.
+	eventDescCreatedAt := eventFields[9].Descriptor()
+	// event.DefaultCreatedAt holds the default value on creation for the created_at field.
+	event.DefaultCreatedAt = eventDescCreatedAt.Default.(func() int64)
+	// eventDescUpdatedAt is the schema descriptor for updated_at field.
+	eventDescUpdatedAt := eventFields[10].Descriptor()
+	// event.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	event.DefaultUpdatedAt = eventDescUpdatedAt.Default.(func() int64)
+	// event.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	event.UpdateDefaultUpdatedAt = eventDescUpdatedAt.UpdateDefault.(func() int64)
+	// eventDescID is the schema descriptor for id field.
+	eventDescID := eventFields[0].Descriptor()
+	// event.DefaultID holds the default value on creation for the id field.
+	event.DefaultID = eventDescID.Default.(func() uuid.UUID)
+	identityFields := schema.Identity{}.Fields()
+	_ = identityFields
+	// identityDescPlatform is the schema descriptor for platform field.
+	identityDescPlatform := identityFields[1].Descriptor()
+	// identity.DefaultPlatform holds the default value on creation for the platform field.
+	identity.DefaultPlatform = identityDescPlatform.Default.(string)
+	// identity.PlatformValidator is a validator for the "platform" field. It is called by the builders before save.
+	identity.PlatformValidator = identityDescPlatform.Validators[0].(func(string) error)
+	// identityDescPlatformUserID is the schema descriptor for platform_user_id field.
+	identityDescPlatformUserID := identityFields[2].Descriptor()
+	// identity.DefaultPlatformUserID holds the default value on creation for the platform_user_id field.
+	identity.DefaultPlatformUserID = identityDescPlatformUserID.Default.(string)
+	// identity.PlatformUserIDValidator is a validator for the "platform_user_id" field. It is called by the builders before save.
+	identity.PlatformUserIDValidator = identityDescPlatformUserID.Validators[0].(func(string) error)
+	// identityDescUsername is the schema descriptor for username field.
+	identityDescUsername := identityFields[3].Descriptor()
+	// identity.DefaultUsername holds the default value on creation for the username field.
+	identity.DefaultUsername = identityDescUsername.Default.(string)
+	// identity.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
+	identity.UsernameValidator = identityDescUsername.Validators[0].(func(string) error)
+	// identityDescDisplayName is the schema descriptor for display_name field.
+	identityDescDisplayName := identityFields[4].Descriptor()
+	// identity.DefaultDisplayName holds the default value on creation for the display_name field.
+	identity.DefaultDisplayName = identityDescDisplayName.Default.(string)
+	// identity.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
+	identity.DisplayNameValidator = identityDescDisplayName.Validators[0].(func(string) error)
+	// identityDescProfilePhotoURL is the schema descriptor for profile_photo_url field.
+	identityDescProfilePhotoURL := identityFields[5].Descriptor()
+	// identity.DefaultProfilePhotoURL holds the default value on creation for the profile_photo_url field.
+	identity.DefaultProfilePhotoURL = identityDescProfilePhotoURL.Default.(string)
+	// identityDescCreatedAt is the schema descriptor for created_at field.
+	identityDescCreatedAt := identityFields[7].Descriptor()
+	// identity.DefaultCreatedAt holds the default value on creation for the created_at field.
+	identity.DefaultCreatedAt = identityDescCreatedAt.Default.(func() int64)
+	// identityDescUpdatedAt is the schema descriptor for updated_at field.
+	identityDescUpdatedAt := identityFields[8].Descriptor()
+	// identity.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	identity.DefaultUpdatedAt = identityDescUpdatedAt.Default.(func() int64)
+	// identity.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	identity.UpdateDefaultUpdatedAt = identityDescUpdatedAt.UpdateDefault.(func() int64)
+	// identityDescID is the schema descriptor for id field.
+	identityDescID := identityFields[0].Descriptor()
+	// identity.DefaultID holds the default value on creation for the id field.
+	identity.DefaultID = identityDescID.Default.(func() uuid.UUID)
 	joinedchatFields := schema.JoinedChat{}.Fields()
 	_ = joinedchatFields
 	// joinedchatDescPlatform is the schema descriptor for platform field.

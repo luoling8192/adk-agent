@@ -13,6 +13,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	"github.com/luoling8192/adk-agent/ent/event"
+	"github.com/luoling8192/adk-agent/ent/identity"
 	"github.com/luoling8192/adk-agent/ent/joinedchat"
 )
 
@@ -75,6 +77,8 @@ func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
 			chatmessage.Table: chatmessage.ValidColumn,
+			event.Table:       event.ValidColumn,
+			identity.Table:    identity.ValidColumn,
 			joinedchat.Table:  joinedchat.ValidColumn,
 		})
 	})

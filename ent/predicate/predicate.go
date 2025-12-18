@@ -9,5 +9,11 @@ import (
 // ChatMessage is the predicate function for chatmessage builders.
 type ChatMessage func(*sql.Selector)
 
+// Event is the predicate function for event builders.
+type Event func(*sql.Selector)
+
+// Identity is the predicate function for identity builders.
+type Identity func(*sql.Selector)
+
 // JoinedChat is the predicate function for joinedchat builders.
 type JoinedChat func(*sql.Selector)

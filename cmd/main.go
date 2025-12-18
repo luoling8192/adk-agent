@@ -60,6 +60,13 @@ func main() {
 
 	slog.Info("Client created successfully")
 
+	err = client.Migrate(ctx)
+	if err != nil {
+		slog.Error("failed to migrate database", "error", err)
+		return
+	}
+	slog.Info("Database migrated successfully")
+
 	count, err := client.ChatMessage.Query().Where(chatmessage.ContentNEQ("")).Count(ctx)
 	if err != nil {
 		slog.Error("failed to get chat messages", "error", err)

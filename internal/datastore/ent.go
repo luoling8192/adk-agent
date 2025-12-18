@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql/schema"
 	"github.com/luoling8192/adk-agent/ent"
+	"github.com/luoling8192/adk-agent/ent/migrate"
 
 	_ "github.com/lib/pq"
 )
@@ -25,4 +27,16 @@ func NewEntClient(databaseURL string) (*Client, error) {
 func (c *Client) Ping(ctx context.Context) error {
 	_, err := c.ExecContext(ctx, "SELECT 1")
 	return err
+}
+
+func (c *Client) Migrate(ctx context.Context) error {
+	return migrate.Create(
+		ctx,
+		c.Schema,
+		[]*schema.Table{
+			migrate.EventsTable,
+			migrate.IdentitiesTable,
+		},
+		migrate.WithForeignKeys(true),
+	)
 }

@@ -83,6 +83,44 @@ var (
 			},
 		},
 	}
+	// EventsColumns holds the columns for the "events" table.
+	EventsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "platform", Type: field.TypeString, Default: ""},
+		{Name: "name", Type: field.TypeString, Default: ""},
+		{Name: "tags", Type: field.TypeJSON, Nullable: true},
+		{Name: "description", Type: field.TypeString, Default: ""},
+		{Name: "from_name", Type: field.TypeString, Default: ""},
+		{Name: "in_chat_id", Type: field.TypeString, Default: ""},
+		{Name: "in_chat_type", Type: field.TypeString, Default: ""},
+		{Name: "platform_timestamp", Type: field.TypeInt64, Default: 0},
+		{Name: "created_at", Type: field.TypeInt64},
+		{Name: "updated_at", Type: field.TypeInt64},
+	}
+	// EventsTable holds the schema information for the "events" table.
+	EventsTable = &schema.Table{
+		Name:       "events",
+		Columns:    EventsColumns,
+		PrimaryKey: []*schema.Column{EventsColumns[0]},
+	}
+	// IdentitiesColumns holds the columns for the "identities" table.
+	IdentitiesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "platform", Type: field.TypeString, Default: ""},
+		{Name: "platform_user_id", Type: field.TypeString, Default: ""},
+		{Name: "username", Type: field.TypeString, Default: ""},
+		{Name: "display_name", Type: field.TypeString, Default: ""},
+		{Name: "profile_photo_url", Type: field.TypeString, Default: ""},
+		{Name: "alt_ids", Type: field.TypeJSON, Nullable: true},
+		{Name: "created_at", Type: field.TypeInt64},
+		{Name: "updated_at", Type: field.TypeInt64},
+	}
+	// IdentitiesTable holds the schema information for the "identities" table.
+	IdentitiesTable = &schema.Table{
+		Name:       "identities",
+		Columns:    IdentitiesColumns,
+		PrimaryKey: []*schema.Column{IdentitiesColumns[0]},
+	}
 	// JoinedChatsColumns holds the columns for the "joined_chats" table.
 	JoinedChatsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -107,12 +145,42 @@ var (
 			},
 		},
 	}
+	// IdentityEventsColumns holds the columns for the "identity_events" table.
+	IdentityEventsColumns = []*schema.Column{
+		{Name: "identity_id", Type: field.TypeUUID},
+		{Name: "event_id", Type: field.TypeUUID},
+	}
+	// IdentityEventsTable holds the schema information for the "identity_events" table.
+	IdentityEventsTable = &schema.Table{
+		Name:       "identity_events",
+		Columns:    IdentityEventsColumns,
+		PrimaryKey: []*schema.Column{IdentityEventsColumns[0], IdentityEventsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "identity_events_identity_id",
+				Columns:    []*schema.Column{IdentityEventsColumns[0]},
+				RefColumns: []*schema.Column{IdentitiesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "identity_events_event_id",
+				Columns:    []*schema.Column{IdentityEventsColumns[1]},
+				RefColumns: []*schema.Column{EventsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		ChatMessagesTable,
+		EventsTable,
+		IdentitiesTable,
 		JoinedChatsTable,
+		IdentityEventsTable,
 	}
 )
 
 func init() {
+	IdentityEventsTable.ForeignKeys[0].RefTable = IdentitiesTable
+	IdentityEventsTable.ForeignKeys[1].RefTable = EventsTable
 }

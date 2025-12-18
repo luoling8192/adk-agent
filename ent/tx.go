@@ -16,6 +16,10 @@ type Tx struct {
 	config
 	// ChatMessage is the client for interacting with the ChatMessage builders.
 	ChatMessage *ChatMessageClient
+	// Event is the client for interacting with the Event builders.
+	Event *EventClient
+	// Identity is the client for interacting with the Identity builders.
+	Identity *IdentityClient
 	// JoinedChat is the client for interacting with the JoinedChat builders.
 	JoinedChat *JoinedChatClient
 
@@ -150,6 +154,8 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.ChatMessage = NewChatMessageClient(tx.config)
+	tx.Event = NewEventClient(tx.config)
+	tx.Identity = NewIdentityClient(tx.config)
 	tx.JoinedChat = NewJoinedChatClient(tx.config)
 }
 

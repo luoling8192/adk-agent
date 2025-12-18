@@ -7,8 +7,11 @@ import "context"
 // SchemaConfig represents alternative schema names for all tables
 // that can be passed at runtime.
 type SchemaConfig struct {
-	ChatMessage string // ChatMessage table.
-	JoinedChat  string // JoinedChat table.
+	ChatMessage    string // ChatMessage table.
+	Event          string // Event table.
+	Identity       string // Identity table.
+	IdentityEvents string // Identity-events->Event table.
+	JoinedChat     string // JoinedChat table.
 }
 
 type schemaCtxKey struct{}
