@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
 )
 
@@ -23,20 +24,16 @@ func (Identity) Fields() []ent.Field {
 			Unique(),
 
 		field.String("platform").
-			Default("").
-			NotEmpty(),
+			Default(""),
 
 		field.String("platform_user_id").
-			Default("").
-			NotEmpty(),
+			Default(""),
 
 		field.String("username").
-			Default("").
-			NotEmpty(),
+			Default(""),
 
 		field.String("display_name").
-			Default("").
-			NotEmpty(),
+			Default(""),
 
 		field.String("profile_photo_url").
 			Default(""),
@@ -57,5 +54,11 @@ func (Identity) Fields() []ent.Field {
 func (Identity) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("events", Event.Type),
+	}
+}
+
+func (Identity) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("platform", "platform_user_id").Unique(),
 	}
 }

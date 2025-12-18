@@ -1,6 +1,8 @@
 package models
 
-import "github.com/luoling8192/adk-agent/ent"
+import (
+	"github.com/luoling8192/adk-agent/ent"
+)
 
 type Client struct {
 	client *ent.Client

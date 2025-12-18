@@ -231,34 +231,14 @@ func (_c *IdentityCreate) check() error {
 	if _, ok := _c.mutation.Platform(); !ok {
 		return &ValidationError{Name: "platform", err: errors.New(`ent: missing required field "Identity.platform"`)}
 	}
-	if v, ok := _c.mutation.Platform(); ok {
-		if err := identity.PlatformValidator(v); err != nil {
-			return &ValidationError{Name: "platform", err: fmt.Errorf(`ent: validator failed for field "Identity.platform": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.PlatformUserID(); !ok {
 		return &ValidationError{Name: "platform_user_id", err: errors.New(`ent: missing required field "Identity.platform_user_id"`)}
-	}
-	if v, ok := _c.mutation.PlatformUserID(); ok {
-		if err := identity.PlatformUserIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_user_id", err: fmt.Errorf(`ent: validator failed for field "Identity.platform_user_id": %w`, err)}
-		}
 	}
 	if _, ok := _c.mutation.Username(); !ok {
 		return &ValidationError{Name: "username", err: errors.New(`ent: missing required field "Identity.username"`)}
 	}
-	if v, ok := _c.mutation.Username(); ok {
-		if err := identity.UsernameValidator(v); err != nil {
-			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "Identity.username": %w`, err)}
-		}
-	}
 	if _, ok := _c.mutation.DisplayName(); !ok {
 		return &ValidationError{Name: "display_name", err: errors.New(`ent: missing required field "Identity.display_name"`)}
-	}
-	if v, ok := _c.mutation.DisplayName(); ok {
-		if err := identity.DisplayNameValidator(v); err != nil {
-			return &ValidationError{Name: "display_name", err: fmt.Errorf(`ent: validator failed for field "Identity.display_name": %w`, err)}
-		}
 	}
 	if _, ok := _c.mutation.ProfilePhotoURL(); !ok {
 		return &ValidationError{Name: "profile_photo_url", err: errors.New(`ent: missing required field "Identity.profile_photo_url"`)}

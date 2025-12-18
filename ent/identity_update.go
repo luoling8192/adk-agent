@@ -230,35 +230,7 @@ func (_u *IdentityUpdate) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *IdentityUpdate) check() error {
-	if v, ok := _u.mutation.Platform(); ok {
-		if err := identity.PlatformValidator(v); err != nil {
-			return &ValidationError{Name: "platform", err: fmt.Errorf(`ent: validator failed for field "Identity.platform": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.PlatformUserID(); ok {
-		if err := identity.PlatformUserIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_user_id", err: fmt.Errorf(`ent: validator failed for field "Identity.platform_user_id": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Username(); ok {
-		if err := identity.UsernameValidator(v); err != nil {
-			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "Identity.username": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.DisplayName(); ok {
-		if err := identity.DisplayNameValidator(v); err != nil {
-			return &ValidationError{Name: "display_name", err: fmt.Errorf(`ent: validator failed for field "Identity.display_name": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (_u *IdentityUpdate) sqlSave(ctx context.Context) (_node int, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(identity.Table, identity.Columns, sqlgraph.NewFieldSpec(identity.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -587,35 +559,7 @@ func (_u *IdentityUpdateOne) defaults() {
 	}
 }
 
-// check runs all checks and user-defined validators on the builder.
-func (_u *IdentityUpdateOne) check() error {
-	if v, ok := _u.mutation.Platform(); ok {
-		if err := identity.PlatformValidator(v); err != nil {
-			return &ValidationError{Name: "platform", err: fmt.Errorf(`ent: validator failed for field "Identity.platform": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.PlatformUserID(); ok {
-		if err := identity.PlatformUserIDValidator(v); err != nil {
-			return &ValidationError{Name: "platform_user_id", err: fmt.Errorf(`ent: validator failed for field "Identity.platform_user_id": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.Username(); ok {
-		if err := identity.UsernameValidator(v); err != nil {
-			return &ValidationError{Name: "username", err: fmt.Errorf(`ent: validator failed for field "Identity.username": %w`, err)}
-		}
-	}
-	if v, ok := _u.mutation.DisplayName(); ok {
-		if err := identity.DisplayNameValidator(v); err != nil {
-			return &ValidationError{Name: "display_name", err: fmt.Errorf(`ent: validator failed for field "Identity.display_name": %w`, err)}
-		}
-	}
-	return nil
-}
-
 func (_u *IdentityUpdateOne) sqlSave(ctx context.Context) (_node *Identity, err error) {
-	if err := _u.check(); err != nil {
-		return _node, err
-	}
 	_spec := sqlgraph.NewUpdateSpec(identity.Table, identity.Columns, sqlgraph.NewFieldSpec(identity.FieldID, field.TypeUUID))
 	id, ok := _u.mutation.ID()
 	if !ok {

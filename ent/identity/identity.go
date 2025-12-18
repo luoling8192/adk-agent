@@ -72,20 +72,12 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultPlatform holds the default value on creation for the "platform" field.
 	DefaultPlatform string
-	// PlatformValidator is a validator for the "platform" field. It is called by the builders before save.
-	PlatformValidator func(string) error
 	// DefaultPlatformUserID holds the default value on creation for the "platform_user_id" field.
 	DefaultPlatformUserID string
-	// PlatformUserIDValidator is a validator for the "platform_user_id" field. It is called by the builders before save.
-	PlatformUserIDValidator func(string) error
 	// DefaultUsername holds the default value on creation for the "username" field.
 	DefaultUsername string
-	// UsernameValidator is a validator for the "username" field. It is called by the builders before save.
-	UsernameValidator func(string) error
 	// DefaultDisplayName holds the default value on creation for the "display_name" field.
 	DefaultDisplayName string
-	// DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
-	DisplayNameValidator func(string) error
 	// DefaultProfilePhotoURL holds the default value on creation for the "profile_photo_url" field.
 	DefaultProfilePhotoURL string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.

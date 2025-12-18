@@ -163,26 +163,18 @@ func init() {
 	identityDescPlatform := identityFields[1].Descriptor()
 	// identity.DefaultPlatform holds the default value on creation for the platform field.
 	identity.DefaultPlatform = identityDescPlatform.Default.(string)
-	// identity.PlatformValidator is a validator for the "platform" field. It is called by the builders before save.
-	identity.PlatformValidator = identityDescPlatform.Validators[0].(func(string) error)
 	// identityDescPlatformUserID is the schema descriptor for platform_user_id field.
 	identityDescPlatformUserID := identityFields[2].Descriptor()
 	// identity.DefaultPlatformUserID holds the default value on creation for the platform_user_id field.
 	identity.DefaultPlatformUserID = identityDescPlatformUserID.Default.(string)
-	// identity.PlatformUserIDValidator is a validator for the "platform_user_id" field. It is called by the builders before save.
-	identity.PlatformUserIDValidator = identityDescPlatformUserID.Validators[0].(func(string) error)
 	// identityDescUsername is the schema descriptor for username field.
 	identityDescUsername := identityFields[3].Descriptor()
 	// identity.DefaultUsername holds the default value on creation for the username field.
 	identity.DefaultUsername = identityDescUsername.Default.(string)
-	// identity.UsernameValidator is a validator for the "username" field. It is called by the builders before save.
-	identity.UsernameValidator = identityDescUsername.Validators[0].(func(string) error)
 	// identityDescDisplayName is the schema descriptor for display_name field.
 	identityDescDisplayName := identityFields[4].Descriptor()
 	// identity.DefaultDisplayName holds the default value on creation for the display_name field.
 	identity.DefaultDisplayName = identityDescDisplayName.Default.(string)
-	// identity.DisplayNameValidator is a validator for the "display_name" field. It is called by the builders before save.
-	identity.DisplayNameValidator = identityDescDisplayName.Validators[0].(func(string) error)
 	// identityDescProfilePhotoURL is the schema descriptor for profile_photo_url field.
 	identityDescProfilePhotoURL := identityFields[5].Descriptor()
 	// identity.DefaultProfilePhotoURL holds the default value on creation for the profile_photo_url field.

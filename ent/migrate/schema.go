@@ -120,6 +120,13 @@ var (
 		Name:       "identities",
 		Columns:    IdentitiesColumns,
 		PrimaryKey: []*schema.Column{IdentitiesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "identity_platform_platform_user_id",
+				Unique:  true,
+				Columns: []*schema.Column{IdentitiesColumns[1], IdentitiesColumns[2]},
+			},
+		},
 	}
 	// JoinedChatsColumns holds the columns for the "joined_chats" table.
 	JoinedChatsColumns = []*schema.Column{
