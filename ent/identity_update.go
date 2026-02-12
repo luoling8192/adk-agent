@@ -12,10 +12,10 @@ import (
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
-	"github.com/luoling8192/adk-agent/ent/internal"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
+	"github.com/luoling8192/mindwave/ent/internal"
+	"github.com/luoling8192/mindwave/ent/predicate"
 )
 
 // IdentityUpdate is the builder for updating Identity entities.

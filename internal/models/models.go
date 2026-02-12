@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/luoling8192/adk-agent/ent"
+	"github.com/luoling8192/mindwave/ent"
 )
 
 type Client struct {

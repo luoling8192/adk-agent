@@ -8,9 +8,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/internal"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/internal"
+	"github.com/luoling8192/mindwave/ent/predicate"
 )
 
 // EventDelete is the builder for deleting a Event entity.

@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/identity"
+	"github.com/luoling8192/mindwave/ent/identity"
 )
 
 // Identity is the model entity for the Identity schema.

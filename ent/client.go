@@ -10,20 +10,20 @@ import (
 	"reflect"
 
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/migrate"
+	"github.com/luoling8192/mindwave/ent/migrate"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
-	"github.com/luoling8192/adk-agent/ent/joinedchat"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
+	"github.com/luoling8192/mindwave/ent/joinedchat"
 
 	stdsql "database/sql"
 
-	"github.com/luoling8192/adk-agent/ent/internal"
+	"github.com/luoling8192/mindwave/ent/internal"
 )
 
 // Client is the client that holds all ent builders.

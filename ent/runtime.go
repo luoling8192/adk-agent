@@ -4,11 +4,11 @@ package ent
 
 import (
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
-	"github.com/luoling8192/adk-agent/ent/joinedchat"
-	"github.com/luoling8192/adk-agent/schema"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
+	"github.com/luoling8192/mindwave/ent/joinedchat"
+	"github.com/luoling8192/mindwave/schema"
 )
 
 // The init function reads all schema descriptors with runtime code
@@ -143,12 +143,16 @@ func init() {
 	eventDescPlatformTimestamp := eventFields[8].Descriptor()
 	// event.DefaultPlatformTimestamp holds the default value on creation for the platform_timestamp field.
 	event.DefaultPlatformTimestamp = eventDescPlatformTimestamp.Default.(int64)
+	// eventDescEvidenceMessageIds is the schema descriptor for evidence_message_ids field.
+	eventDescEvidenceMessageIds := eventFields[9].Descriptor()
+	// event.DefaultEvidenceMessageIds holds the default value on creation for the evidence_message_ids field.
+	event.DefaultEvidenceMessageIds = eventDescEvidenceMessageIds.Default.([]uuid.UUID)
 	// eventDescCreatedAt is the schema descriptor for created_at field.
-	eventDescCreatedAt := eventFields[9].Descriptor()
+	eventDescCreatedAt := eventFields[10].Descriptor()
 	// event.DefaultCreatedAt holds the default value on creation for the created_at field.
 	event.DefaultCreatedAt = eventDescCreatedAt.Default.(func() int64)
 	// eventDescUpdatedAt is the schema descriptor for updated_at field.
-	eventDescUpdatedAt := eventFields[10].Descriptor()
+	eventDescUpdatedAt := eventFields[11].Descriptor()
 	// event.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	event.DefaultUpdatedAt = eventDescUpdatedAt.Default.(func() int64)
 	// event.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

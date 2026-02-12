@@ -5,7 +5,7 @@ package chatmessage
 import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/predicate"
 	pgvector "github.com/pgvector/pgvector-go"
 )
 

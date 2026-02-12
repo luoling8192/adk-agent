@@ -5,12 +5,12 @@ package enttest
 import (
 	"context"
 
-	"github.com/luoling8192/adk-agent/ent"
+	"github.com/luoling8192/mindwave/ent"
 	// required by schema hooks.
-	_ "github.com/luoling8192/adk-agent/ent/runtime"
+	_ "github.com/luoling8192/mindwave/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/luoling8192/adk-agent/ent/migrate"
+	"github.com/luoling8192/mindwave/ent/migrate"
 )
 
 type (

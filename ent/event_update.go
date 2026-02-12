@@ -12,10 +12,10 @@ import (
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
-	"github.com/luoling8192/adk-agent/ent/internal"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
+	"github.com/luoling8192/mindwave/ent/internal"
+	"github.com/luoling8192/mindwave/ent/predicate"
 )
 
 // EventUpdate is the builder for updating Event entities.
@@ -151,6 +151,18 @@ func (_u *EventUpdate) SetNillablePlatformTimestamp(v *int64) *EventUpdate {
 // AddPlatformTimestamp adds value to the "platform_timestamp" field.
 func (_u *EventUpdate) AddPlatformTimestamp(v int64) *EventUpdate {
 	_u.mutation.AddPlatformTimestamp(v)
+	return _u
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (_u *EventUpdate) SetEvidenceMessageIds(v []uuid.UUID) *EventUpdate {
+	_u.mutation.SetEvidenceMessageIds(v)
+	return _u
+}
+
+// AppendEvidenceMessageIds appends value to the "evidence_message_ids" field.
+func (_u *EventUpdate) AppendEvidenceMessageIds(v []uuid.UUID) *EventUpdate {
+	_u.mutation.AppendEvidenceMessageIds(v)
 	return _u
 }
 
@@ -346,6 +358,14 @@ func (_u *EventUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedPlatformTimestamp(); ok {
 		_spec.AddField(event.FieldPlatformTimestamp, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.EvidenceMessageIds(); ok {
+		_spec.SetField(event.FieldEvidenceMessageIds, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedEvidenceMessageIds(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, event.FieldEvidenceMessageIds, value)
+		})
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(event.FieldCreatedAt, field.TypeInt64, value)
@@ -549,6 +569,18 @@ func (_u *EventUpdateOne) SetNillablePlatformTimestamp(v *int64) *EventUpdateOne
 // AddPlatformTimestamp adds value to the "platform_timestamp" field.
 func (_u *EventUpdateOne) AddPlatformTimestamp(v int64) *EventUpdateOne {
 	_u.mutation.AddPlatformTimestamp(v)
+	return _u
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (_u *EventUpdateOne) SetEvidenceMessageIds(v []uuid.UUID) *EventUpdateOne {
+	_u.mutation.SetEvidenceMessageIds(v)
+	return _u
+}
+
+// AppendEvidenceMessageIds appends value to the "evidence_message_ids" field.
+func (_u *EventUpdateOne) AppendEvidenceMessageIds(v []uuid.UUID) *EventUpdateOne {
+	_u.mutation.AppendEvidenceMessageIds(v)
 	return _u
 }
 
@@ -774,6 +806,14 @@ func (_u *EventUpdateOne) sqlSave(ctx context.Context) (_node *Event, err error)
 	}
 	if value, ok := _u.mutation.AddedPlatformTimestamp(); ok {
 		_spec.AddField(event.FieldPlatformTimestamp, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.EvidenceMessageIds(); ok {
+		_spec.SetField(event.FieldEvidenceMessageIds, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedEvidenceMessageIds(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, event.FieldEvidenceMessageIds, value)
+		})
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(event.FieldCreatedAt, field.TypeInt64, value)

@@ -8,9 +8,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
-	"github.com/luoling8192/adk-agent/ent/internal"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
+	"github.com/luoling8192/mindwave/ent/internal"
+	"github.com/luoling8192/mindwave/ent/predicate"
 )
 
 // ChatMessageDelete is the builder for deleting a ChatMessage entity.

@@ -5,8 +5,8 @@ import (
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/luoling8192/adk-agent/ent"
-	"github.com/luoling8192/adk-agent/ent/migrate"
+	"github.com/luoling8192/mindwave/ent"
+	"github.com/luoling8192/mindwave/ent/migrate"
 
 	_ "github.com/lib/pq"
 )

@@ -29,6 +29,8 @@ const (
 	FieldInChatType = "in_chat_type"
 	// FieldPlatformTimestamp holds the string denoting the platform_timestamp field in the database.
 	FieldPlatformTimestamp = "platform_timestamp"
+	// FieldEvidenceMessageIds holds the string denoting the evidence_message_ids field in the database.
+	FieldEvidenceMessageIds = "evidence_message_ids"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -55,6 +57,7 @@ var Columns = []string{
 	FieldInChatID,
 	FieldInChatType,
 	FieldPlatformTimestamp,
+	FieldEvidenceMessageIds,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -102,6 +105,8 @@ var (
 	InChatTypeValidator func(string) error
 	// DefaultPlatformTimestamp holds the default value on creation for the "platform_timestamp" field.
 	DefaultPlatformTimestamp int64
+	// DefaultEvidenceMessageIds holds the default value on creation for the "evidence_message_ids" field.
+	DefaultEvidenceMessageIds []uuid.UUID
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() int64
 	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.

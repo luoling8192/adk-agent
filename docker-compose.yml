@@ -1,0 +1,19 @@
+services:
+  age:
+    image: apache/age:latest
+    ports:
+      - '5456:5432'
+    environment:
+      POSTGRES_PASSWORD: mindwave
+    volumes:
+      - ./sql/init.apache-age.sql:/docker-entrypoint-initdb.d/001-age-init.sql:ro
+      - age-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U mindwave -d mindwave']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  age-data:
+    driver: local

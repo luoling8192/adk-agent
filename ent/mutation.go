@@ -11,11 +11,11 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
-	"github.com/luoling8192/adk-agent/ent/joinedchat"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
+	"github.com/luoling8192/mindwave/ent/joinedchat"
+	"github.com/luoling8192/mindwave/ent/predicate"
 	pgvector "github.com/pgvector/pgvector-go"
 )
 
@@ -1587,30 +1587,32 @@ func (m *ChatMessageMutation) ResetEdge(name string) error {
 // EventMutation represents an operation that mutates the Event nodes in the graph.
 type EventMutation struct {
 	config
-	op                    Op
-	typ                   string
-	id                    *uuid.UUID
-	platform              *string
-	name                  *string
-	tags                  *[]string
-	appendtags            []string
-	description           *string
-	from_name             *string
-	in_chat_id            *string
-	in_chat_type          *string
-	platform_timestamp    *int64
-	addplatform_timestamp *int64
-	created_at            *int64
-	addcreated_at         *int64
-	updated_at            *int64
-	addupdated_at         *int64
-	clearedFields         map[string]struct{}
-	identities            map[uuid.UUID]struct{}
-	removedidentities     map[uuid.UUID]struct{}
-	clearedidentities     bool
-	done                  bool
-	oldValue              func(context.Context) (*Event, error)
-	predicates            []predicate.Event
+	op                         Op
+	typ                        string
+	id                         *uuid.UUID
+	platform                   *string
+	name                       *string
+	tags                       *[]string
+	appendtags                 []string
+	description                *string
+	from_name                  *string
+	in_chat_id                 *string
+	in_chat_type               *string
+	platform_timestamp         *int64
+	addplatform_timestamp      *int64
+	evidence_message_ids       *[]uuid.UUID
+	appendevidence_message_ids []uuid.UUID
+	created_at                 *int64
+	addcreated_at              *int64
+	updated_at                 *int64
+	addupdated_at              *int64
+	clearedFields              map[string]struct{}
+	identities                 map[uuid.UUID]struct{}
+	removedidentities          map[uuid.UUID]struct{}
+	clearedidentities          bool
+	done                       bool
+	oldValue                   func(context.Context) (*Event, error)
+	predicates                 []predicate.Event
 }
 
 var _ ent.Mutation = (*EventMutation)(nil)
@@ -2054,6 +2056,57 @@ func (m *EventMutation) ResetPlatformTimestamp() {
 	m.addplatform_timestamp = nil
 }
 
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (m *EventMutation) SetEvidenceMessageIds(u []uuid.UUID) {
+	m.evidence_message_ids = &u
+	m.appendevidence_message_ids = nil
+}
+
+// EvidenceMessageIds returns the value of the "evidence_message_ids" field in the mutation.
+func (m *EventMutation) EvidenceMessageIds() (r []uuid.UUID, exists bool) {
+	v := m.evidence_message_ids
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEvidenceMessageIds returns the old "evidence_message_ids" field's value of the Event entity.
+// If the Event object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *EventMutation) OldEvidenceMessageIds(ctx context.Context) (v []uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEvidenceMessageIds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEvidenceMessageIds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEvidenceMessageIds: %w", err)
+	}
+	return oldValue.EvidenceMessageIds, nil
+}
+
+// AppendEvidenceMessageIds adds u to the "evidence_message_ids" field.
+func (m *EventMutation) AppendEvidenceMessageIds(u []uuid.UUID) {
+	m.appendevidence_message_ids = append(m.appendevidence_message_ids, u...)
+}
+
+// AppendedEvidenceMessageIds returns the list of values that were appended to the "evidence_message_ids" field in this mutation.
+func (m *EventMutation) AppendedEvidenceMessageIds() ([]uuid.UUID, bool) {
+	if len(m.appendevidence_message_ids) == 0 {
+		return nil, false
+	}
+	return m.appendevidence_message_ids, true
+}
+
+// ResetEvidenceMessageIds resets all changes to the "evidence_message_ids" field.
+func (m *EventMutation) ResetEvidenceMessageIds() {
+	m.evidence_message_ids = nil
+	m.appendevidence_message_ids = nil
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *EventMutation) SetCreatedAt(i int64) {
 	m.created_at = &i
@@ -2254,7 +2307,7 @@ func (m *EventMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *EventMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 11)
 	if m.platform != nil {
 		fields = append(fields, event.FieldPlatform)
 	}
@@ -2278,6 +2331,9 @@ func (m *EventMutation) Fields() []string {
 	}
 	if m.platform_timestamp != nil {
 		fields = append(fields, event.FieldPlatformTimestamp)
+	}
+	if m.evidence_message_ids != nil {
+		fields = append(fields, event.FieldEvidenceMessageIds)
 	}
 	if m.created_at != nil {
 		fields = append(fields, event.FieldCreatedAt)
@@ -2309,6 +2365,8 @@ func (m *EventMutation) Field(name string) (ent.Value, bool) {
 		return m.InChatType()
 	case event.FieldPlatformTimestamp:
 		return m.PlatformTimestamp()
+	case event.FieldEvidenceMessageIds:
+		return m.EvidenceMessageIds()
 	case event.FieldCreatedAt:
 		return m.CreatedAt()
 	case event.FieldUpdatedAt:
@@ -2338,6 +2396,8 @@ func (m *EventMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldInChatType(ctx)
 	case event.FieldPlatformTimestamp:
 		return m.OldPlatformTimestamp(ctx)
+	case event.FieldEvidenceMessageIds:
+		return m.OldEvidenceMessageIds(ctx)
 	case event.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case event.FieldUpdatedAt:
@@ -2406,6 +2466,13 @@ func (m *EventMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPlatformTimestamp(v)
+		return nil
+	case event.FieldEvidenceMessageIds:
+		v, ok := value.([]uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEvidenceMessageIds(v)
 		return nil
 	case event.FieldCreatedAt:
 		v, ok := value.(int64)
@@ -2541,6 +2608,9 @@ func (m *EventMutation) ResetField(name string) error {
 		return nil
 	case event.FieldPlatformTimestamp:
 		m.ResetPlatformTimestamp()
+		return nil
+	case event.FieldEvidenceMessageIds:
+		m.ResetEvidenceMessageIds()
 		return nil
 	case event.FieldCreatedAt:
 		m.ResetCreatedAt()

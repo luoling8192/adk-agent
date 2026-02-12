@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/luoling8192/adk-agent/ent"
+	"github.com/luoling8192/mindwave/ent"
 )
 
 // The ChatMessageFunc type is an adapter to allow the use of ordinary

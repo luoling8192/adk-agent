@@ -12,8 +12,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/event"
-	"github.com/luoling8192/adk-agent/ent/identity"
+	"github.com/luoling8192/mindwave/ent/event"
+	"github.com/luoling8192/mindwave/ent/identity"
 )
 
 // EventCreate is the builder for creating a Event entity.
@@ -125,6 +125,12 @@ func (_c *EventCreate) SetNillablePlatformTimestamp(v *int64) *EventCreate {
 	if v != nil {
 		_c.SetPlatformTimestamp(*v)
 	}
+	return _c
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (_c *EventCreate) SetEvidenceMessageIds(v []uuid.UUID) *EventCreate {
+	_c.mutation.SetEvidenceMessageIds(v)
 	return _c
 }
 
@@ -248,6 +254,10 @@ func (_c *EventCreate) defaults() {
 		v := event.DefaultPlatformTimestamp
 		_c.mutation.SetPlatformTimestamp(v)
 	}
+	if _, ok := _c.mutation.EvidenceMessageIds(); !ok {
+		v := event.DefaultEvidenceMessageIds
+		_c.mutation.SetEvidenceMessageIds(v)
+	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		v := event.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
@@ -314,6 +324,9 @@ func (_c *EventCreate) check() error {
 	}
 	if _, ok := _c.mutation.PlatformTimestamp(); !ok {
 		return &ValidationError{Name: "platform_timestamp", err: errors.New(`ent: missing required field "Event.platform_timestamp"`)}
+	}
+	if _, ok := _c.mutation.EvidenceMessageIds(); !ok {
+		return &ValidationError{Name: "evidence_message_ids", err: errors.New(`ent: missing required field "Event.evidence_message_ids"`)}
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Event.created_at"`)}
@@ -389,6 +402,10 @@ func (_c *EventCreate) createSpec() (*Event, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.PlatformTimestamp(); ok {
 		_spec.SetField(event.FieldPlatformTimestamp, field.TypeInt64, value)
 		_node.PlatformTimestamp = value
+	}
+	if value, ok := _c.mutation.EvidenceMessageIds(); ok {
+		_spec.SetField(event.FieldEvidenceMessageIds, field.TypeJSON, value)
+		_node.EvidenceMessageIds = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(event.FieldCreatedAt, field.TypeInt64, value)
@@ -572,6 +589,18 @@ func (u *EventUpsert) UpdatePlatformTimestamp() *EventUpsert {
 // AddPlatformTimestamp adds v to the "platform_timestamp" field.
 func (u *EventUpsert) AddPlatformTimestamp(v int64) *EventUpsert {
 	u.Add(event.FieldPlatformTimestamp, v)
+	return u
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (u *EventUpsert) SetEvidenceMessageIds(v []uuid.UUID) *EventUpsert {
+	u.Set(event.FieldEvidenceMessageIds, v)
+	return u
+}
+
+// UpdateEvidenceMessageIds sets the "evidence_message_ids" field to the value that was provided on create.
+func (u *EventUpsert) UpdateEvidenceMessageIds() *EventUpsert {
+	u.SetExcluded(event.FieldEvidenceMessageIds)
 	return u
 }
 
@@ -782,6 +811,20 @@ func (u *EventUpsertOne) AddPlatformTimestamp(v int64) *EventUpsertOne {
 func (u *EventUpsertOne) UpdatePlatformTimestamp() *EventUpsertOne {
 	return u.Update(func(s *EventUpsert) {
 		s.UpdatePlatformTimestamp()
+	})
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (u *EventUpsertOne) SetEvidenceMessageIds(v []uuid.UUID) *EventUpsertOne {
+	return u.Update(func(s *EventUpsert) {
+		s.SetEvidenceMessageIds(v)
+	})
+}
+
+// UpdateEvidenceMessageIds sets the "evidence_message_ids" field to the value that was provided on create.
+func (u *EventUpsertOne) UpdateEvidenceMessageIds() *EventUpsertOne {
+	return u.Update(func(s *EventUpsert) {
+		s.UpdateEvidenceMessageIds()
 	})
 }
 
@@ -1165,6 +1208,20 @@ func (u *EventUpsertBulk) AddPlatformTimestamp(v int64) *EventUpsertBulk {
 func (u *EventUpsertBulk) UpdatePlatformTimestamp() *EventUpsertBulk {
 	return u.Update(func(s *EventUpsert) {
 		s.UpdatePlatformTimestamp()
+	})
+}
+
+// SetEvidenceMessageIds sets the "evidence_message_ids" field.
+func (u *EventUpsertBulk) SetEvidenceMessageIds(v []uuid.UUID) *EventUpsertBulk {
+	return u.Update(func(s *EventUpsert) {
+		s.SetEvidenceMessageIds(v)
+	})
+}
+
+// UpdateEvidenceMessageIds sets the "evidence_message_ids" field to the value that was provided on create.
+func (u *EventUpsertBulk) UpdateEvidenceMessageIds() *EventUpsertBulk {
+	return u.Update(func(s *EventUpsert) {
+		s.UpdateEvidenceMessageIds()
 	})
 }
 

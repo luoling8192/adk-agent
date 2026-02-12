@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/event"
+	"github.com/luoling8192/mindwave/ent/event"
 )
 
 // Event is the model entity for the Event schema.
@@ -34,6 +34,8 @@ type Event struct {
 	InChatType string `json:"in_chat_type,omitempty"`
 	// PlatformTimestamp holds the value of the "platform_timestamp" field.
 	PlatformTimestamp int64 `json:"platform_timestamp,omitempty"`
+	// EvidenceMessageIds holds the value of the "evidence_message_ids" field.
+	EvidenceMessageIds []uuid.UUID `json:"evidence_message_ids,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt int64 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -67,7 +69,7 @@ func (*Event) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case event.FieldTags:
+		case event.FieldTags, event.FieldEvidenceMessageIds:
 			values[i] = new([]byte)
 		case event.FieldPlatformTimestamp, event.FieldCreatedAt, event.FieldUpdatedAt:
 			values[i] = new(sql.NullInt64)
@@ -146,6 +148,14 @@ func (_m *Event) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.PlatformTimestamp = value.Int64
 			}
+		case event.FieldEvidenceMessageIds:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field evidence_message_ids", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &_m.EvidenceMessageIds); err != nil {
+					return fmt.Errorf("unmarshal field evidence_message_ids: %w", err)
+				}
+			}
 		case event.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -222,6 +232,9 @@ func (_m *Event) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("platform_timestamp=")
 	builder.WriteString(fmt.Sprintf("%v", _m.PlatformTimestamp))
+	builder.WriteString(", ")
+	builder.WriteString("evidence_message_ids=")
+	builder.WriteString(fmt.Sprintf("%v", _m.EvidenceMessageIds))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(fmt.Sprintf("%v", _m.CreatedAt))

@@ -94,6 +94,7 @@ var (
 		{Name: "in_chat_id", Type: field.TypeString, Default: ""},
 		{Name: "in_chat_type", Type: field.TypeString, Default: ""},
 		{Name: "platform_timestamp", Type: field.TypeInt64, Default: 0},
+		{Name: "evidence_message_ids", Type: field.TypeJSON},
 		{Name: "created_at", Type: field.TypeInt64},
 		{Name: "updated_at", Type: field.TypeInt64},
 	}

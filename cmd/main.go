@@ -12,12 +12,13 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/joho/godotenv"
 	"github.com/lmittmann/tint"
-	"github.com/luoling8192/adk-agent/ent"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
-	"github.com/luoling8192/adk-agent/internal/agent"
-	"github.com/luoling8192/adk-agent/internal/datastore"
-	"github.com/luoling8192/adk-agent/internal/metrics"
-	"github.com/luoling8192/adk-agent/internal/services/distill"
+	"github.com/luoling8192/mindwave/ent"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
+	"github.com/luoling8192/mindwave/internal/agent"
+	"github.com/luoling8192/mindwave/internal/datastore"
+	"github.com/luoling8192/mindwave/internal/graph"
+	"github.com/luoling8192/mindwave/internal/metrics"
+	"github.com/luoling8192/mindwave/internal/services/distill"
 	"github.com/nekomeowww/fo"
 	"github.com/samber/lo"
 	"github.com/sourcegraph/conc"
@@ -25,6 +26,7 @@ import (
 
 const (
 	defaultDatabaseURL = "postgresql://postgres:postgres@localhost:5432/adk-agent"
+	defaultGraphName   = "mindwave"
 	hoursPerDay        = 24 * time.Hour
 )
 
@@ -144,13 +146,23 @@ func main() {
 		return
 	}
 
+	graphWriter, err := graph.NewWriter(client, fo.May(lo.Coalesce(os.Getenv("AGE_GRAPH_NAME"), defaultGraphName)))
+	if err != nil {
+		slog.Error("failed to create graph writer", "error", err)
+		return
+	}
+	if err := graphWriter.EnsureGraph(ctx); err != nil {
+		slog.Error("failed to ensure graph exists", "error", err)
+		return
+	}
+
 	var wg conc.WaitGroup
 	for day := range dayCountInt {
 		wg.Go(func() {
 			start := time.Now().Add(-time.Duration(day) * hoursPerDay)
 			end := start.Add(hoursPerDay)
 
-			extractedItems, err := distill.DistillOneRound(ctx, client, grouped, selectedIdx, start, end, llmClient)
+			extractedItems, err := distill.DistillOneRound(ctx, client, grouped, selectedIdx, start, end, llmClient, graphWriter)
 			if err != nil {
 				slog.Error("failed to distill one round", "error", err)
 				return

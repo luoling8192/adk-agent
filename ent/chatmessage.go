@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/chatmessage"
+	"github.com/luoling8192/mindwave/ent/chatmessage"
 	pgvector "github.com/pgvector/pgvector-go"
 )
 

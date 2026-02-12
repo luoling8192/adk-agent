@@ -5,7 +5,7 @@ package joinedchat
 import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
-	"github.com/luoling8192/adk-agent/ent/predicate"
+	"github.com/luoling8192/mindwave/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

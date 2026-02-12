@@ -52,6 +52,9 @@ func (Event) Fields() []ent.Field {
 		field.Int64("platform_timestamp").
 			Default(0),
 
+		field.JSON("evidence_message_ids", []uuid.UUID{}).
+			Default([]uuid.UUID{}),
+
 		field.Int64("created_at").
 			DefaultFunc(func() int64 { return time.Now().UnixMilli() }),
 
